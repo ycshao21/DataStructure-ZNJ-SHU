@@ -18,8 +18,7 @@ public:
     /* Constructors and Destructor */
 
     AdjMatWDirGraph(sizet vertNum = 0) : _edgeNum(0), _adjMat(vertNum), _vertices() {}
-    AdjMatWDirGraph(const std::vector<VertTy>& vertices) :
-        _edgeNum(0), _adjMat(vertices.size()), _vertices(vertices) {}
+    AdjMatWDirGraph(const std::vector<VertTy>& vertices);
     AdjMatWDirGraph(const Graph&) = default;
     Graph& operator=(const Graph& rhs) = default;
     virtual ~AdjMatWDirGraph() = default;
@@ -31,6 +30,7 @@ public:
     sizet numOfEdges() const { return _edgeNum; }
 
     /* Element Access */
+
     sizet outDegree(const VertTy& from) const;
     sizet inDegree(const VertTy& to) const;
     sizet degree(const VertTy& vert) const { return outDegree(vert) + inDegree(vert); }
@@ -40,11 +40,8 @@ public:
     const VertTy* nextAdjVertex(const VertTy& from, const VertTy& after)const;
     VertTy* nextAdjVertex(const VertTy& from, const VertTy& after);
 
-    const WeightTy& getWeight(const VertTy& from, const VertTy& to) const;
-    WeightTy& getWeight(const VertTy& from, const VertTy& to);
-
-    const WeightTy& getInfinity() const { return infinity; }
-    WeightTy& getInfinity() { return infinity; }
+    WeightTy getWeight(const VertTy& from, const VertTy& to) const;
+    WeightTy getInfinity() const { return infinity; }
 
     /* Modifier */
 
@@ -57,6 +54,7 @@ public:
     void eraseEdge(const VertTy& from, const VertTy& to);
 
     /* Shortest Path Algorithm */
+
     template<class VertTy, class WeightTy, WeightTy infinity>
     friend void ShortestPath::Dijkstra(const AdjMatWDirGraph<VertTy, WeightTy, infinity>& g,
         const VertTy& source, const VertTy& end, std::ostream* out);
@@ -68,10 +66,10 @@ public:
         const VertTy& source, const VertTy& end, std::ostream* out);
 
     /* Output */
+
     void printAdjMatrix(std::ostream& out = std::cout) const;
     void printVertices(std::ostream& out = std::cout) const;
     void printEdges(std::ostream& out = std::cout) const;
-
 private:
     SquareMatrix<WeightTy, infinity> _adjMat;  // Adjacent matrix of the graph.
     sizet _edgeNum;  // Number of edges in the graph.
@@ -90,6 +88,18 @@ private:
         return i;
     }
 };
+
+template<class VertTy, class WeightTy, WeightTy infinity>
+AdjMatWDirGraph<VertTy, WeightTy, infinity>::AdjMatWDirGraph(const std::vector<VertTy>& vertices) {
+    // Check if there are duplicate vertices.
+    for (const auto& vert : vertices) {
+        if (std::ranges::find(_vertices, vert) == _vertices.end()) {
+            _vertices.push_back(vert);
+        }
+    }
+    _edgeNum = 0;
+    _adjMat.resize(_vertices.size());
+}
 
 template<class VertTy, class WeightTy, WeightTy infinity>
 const VertTy* AdjMatWDirGraph<VertTy, WeightTy, infinity>::firstAdjVertex(const VertTy& from) const {
@@ -151,16 +161,10 @@ auto AdjMatWDirGraph<VertTy, WeightTy, infinity>::inDegree(const VertTy& to) con
 }
 
 template<class VertTy, class WeightTy, WeightTy infinity>
-const WeightTy& AdjMatWDirGraph<VertTy, WeightTy, infinity>::getWeight(const VertTy& from, const VertTy& to) const {
+WeightTy AdjMatWDirGraph<VertTy, WeightTy, infinity>::getWeight(const VertTy& from, const VertTy& to) const {
     indexOfVertex(from);
     indexOfVertex(to);
     return _adjMat[from][to];
-}
-
-template<class VertTy, class WeightTy, WeightTy infinity>
-WeightTy& AdjMatWDirGraph<VertTy, WeightTy, infinity>::getWeight(const VertTy& from, const VertTy& to) {
-    auto const_this = const_cast<const Graph*>(this);
-    return const_cast<WeightTy&>(const_this->getWeight(from, to));
 }
 
 template<class VertTy, class WeightTy, WeightTy infinity>

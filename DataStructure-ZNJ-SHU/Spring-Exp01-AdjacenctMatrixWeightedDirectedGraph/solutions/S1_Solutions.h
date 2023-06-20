@@ -62,6 +62,7 @@ namespace S1
             std::cout << "该顶点不存在" << std::endl;
         }
     }
+
     template<class VertTy, class WeightTy, WeightTy infinity>
     void ShortestPath(const AdjMatWDirGraph<VertTy, WeightTy, infinity>& g, const VertTy& source, const VertTy& end) {
         std::cout << "------------\n";
@@ -84,7 +85,7 @@ namespace S1
         } catch (VertexNotFound) {
             std::cout << "顶点不存在" << std::endl;
         } catch (NegativeCycle) {
-            std::cout << "含负权回路" << std::endl;
+            std::cout << "含负权回路，无法使用Bellman-Form算法" << std::endl;
         }
         std::cout << std::endl;
 
@@ -96,7 +97,7 @@ namespace S1
         } catch (VertexNotFound) {
             std::cout << "顶点不存在" << std::endl;
         } catch (NegativeCycle) {
-            std::cout << "含负权回路" << std::endl;
+            std::cout << "含负权回路，无法使用Floyd-Warshall算法" << std::endl;
         }
     }
 }
