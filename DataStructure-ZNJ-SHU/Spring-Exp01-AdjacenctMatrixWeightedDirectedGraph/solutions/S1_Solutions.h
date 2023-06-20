@@ -63,14 +63,14 @@ namespace S1
         }
     }
     template<class VertTy, class WeightTy, WeightTy infinity>
-    void ShortestPath(const AdjMatWDirGraph<VertTy, WeightTy, infinity>& g, const VertTy& vert) {
+    void ShortestPath(const AdjMatWDirGraph<VertTy, WeightTy, infinity>& g, const VertTy& source, const VertTy& end) {
         std::cout << "------------\n";
         std::cout << "| Dijkstra |\n";
         std::cout << "------------" << std::endl;
         try {
-            ShortestPath::Dijkstra(g, vert);
+            ShortestPath::Dijkstra(g, source, end);
         } catch (VertexNotFound) {
-            std::cout << "该顶点不存在" << std::endl;
+            std::cout << "顶点不存在" << std::endl;
         } catch (NegativeEdge) {
             std::cout << "含负权边，无法使用Dijkstra算法" << std::endl;
         }
@@ -80,9 +80,9 @@ namespace S1
         std::cout << "| Bellman-Ford |\n";
         std::cout << "----------------" << std::endl;
         try {
-            ShortestPath::BellmanFord(g, vert);
+            ShortestPath::BellmanFord(g, source, end);
         } catch (VertexNotFound) {
-            std::cout << "该顶点不存在" << std::endl;
+            std::cout << "顶点不存在" << std::endl;
         } catch (NegativeCycle) {
             std::cout << "含负权回路" << std::endl;
         }
@@ -92,7 +92,9 @@ namespace S1
         std::cout << "| Floyd-Warshall |\n";
         std::cout << "------------------" << std::endl;
         try {
-            ShortestPath::FloydWarshall(g);
+            ShortestPath::FloydWarshall(g, source, end);
+        } catch (VertexNotFound) {
+            std::cout << "顶点不存在" << std::endl;
         } catch (NegativeCycle) {
             std::cout << "含负权回路" << std::endl;
         }

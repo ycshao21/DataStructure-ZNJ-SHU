@@ -35,35 +35,29 @@ namespace ShortestPath
 
     template<class VertTy, class WeightTy, WeightTy infinity>
     void printPath(const std::vector<VertTy>& vertices, const std::vector<PathNode<WeightTy, infinity>>& paths,
-        indext sourceIndex, std::ostream& out) {
-        out << "源点：" << vertices[sourceIndex] << std::endl;
+        indext sourceIndex, indext endIndex, std::ostream& out) {
         std::stack<indext> st;
-        bool hasPath = false;
-        for (indext i = 0; i < paths.size(); i++) {
-            if (sourceIndex == i || paths[i].dist == infinity) { continue; }
-            hasPath = true;
-            // Find the path backwards.
-            indext curIndex = i;
-            while (curIndex != sourceIndex) {
-                st.push(curIndex);
-                curIndex = paths[curIndex].prev;
-            }
-            // Print the path.
-            out << "终点：" << vertices[i];
-            out << "    最短路径：" << vertices[sourceIndex];
-            while (!st.empty()) {
-                out << "->" << vertices[st.top()];
-                st.pop();
-            }
-            out << "    长度：" << paths[i].dist << std::endl;
-        }
-        if (!hasPath) {
+        if (paths[endIndex].dist == infinity) {
             out << "无路径" << std::endl;
+            return;
         }
+        indext curIndex = endIndex;
+        while (curIndex != sourceIndex) {
+            st.push(curIndex);
+            curIndex = paths[curIndex].prev;
+        }
+        // Print the path.
+        out << "最短路径：" << vertices[sourceIndex];
+        while (!st.empty()) {
+            out << "->" << vertices[st.top()];
+            st.pop();
+        }
+        out << "\n长度：" << paths[endIndex].dist << std::endl;
     }
 
     template<class VertTy, class WeightTy, WeightTy infinity>
-    void Dijkstra(const AdjMatWDirGraph<VertTy, WeightTy, infinity>& g, const VertTy& source, std::ostream* out = &std::cout) {
+    void Dijkstra(const AdjMatWDirGraph<VertTy, WeightTy, infinity>& g,
+        const VertTy& source, const VertTy& end, std::ostream* out = &std::cout) {
         // Check if the graph has negative weights.
         for (const auto& row : g._adjMat) {
             for (const auto& w : row) {
@@ -78,7 +72,9 @@ namespace ShortestPath
 
         sizet vertNum = g.numOfVertices();
         indext sourceIndex = g.indexOfVertex(source);
+        indext endIndex = g.indexOfVertex(end);
         std::vector<PathNode> paths(vertNum);
+        paths[sourceIndex].dist = 0;
         std::vector<uint8_t> visited(vertNum, 0);
 
         // Create and initialize the minimum heap.
@@ -97,23 +93,24 @@ namespace ShortestPath
                 WeightTy tempDist = minVert.dist + g._adjMat[minVertIndex][j];
                 if (tempDist < paths[j].dist) {
                     paths[j] = { tempDist, minVertIndex };
-                    minHeap.push(VertNode{ j, paths[j].dist });
+                    minHeap.push(VertNode{ j, tempDist });
                 }
             }
         }
-        // Print shortest paths.
+        // Print the shortest path.
         if (out != nullptr) {
-            printPath(g._vertices, paths, sourceIndex, *out);
+            printPath(g._vertices, paths, sourceIndex, endIndex, *out);
         }
     }
 
     template<class VertTy, class WeightTy, WeightTy infinity>
-    void BellmanFord(const AdjMatWDirGraph<VertTy, WeightTy, infinity>& g, const VertTy& source,
-        std::ostream* out = &std::cout)
+    void BellmanFord(const AdjMatWDirGraph<VertTy, WeightTy, infinity>& g,
+        const VertTy& source, const VertTy& end, std::ostream* out = &std::cout)
     {
         using PathNode = PathNode<WeightTy, infinity>;
         sizet vertNum = g.numOfVertices();
         indext sourceIndex = g.indexOfVertex(source);
+        indext endIndex = g.indexOfVertex(end);
         // Initialize paths.
         std::vector<PathNode> paths(vertNum);
         paths[sourceIndex].dist = 0;
@@ -149,16 +146,20 @@ namespace ShortestPath
                 }
             }
         }
+        // Print the shortest path.
         if (out != nullptr) {
-            printPath(g._vertices, paths, sourceIndex, *out);
+            printPath(g._vertices, paths, sourceIndex, endIndex, *out);
         }
     }
 
     template<class VertTy, class WeightTy, WeightTy infinity>
-    void FloydWarshall(const AdjMatWDirGraph<VertTy, WeightTy, infinity>& g, std::ostream* out = &std::cout)
+    void FloydWarshall(const AdjMatWDirGraph<VertTy, WeightTy, infinity>& g,
+        const VertTy& source, const VertTy& end, std::ostream* out = &std::cout)
     {
         using PathNode = PathNode<WeightTy, infinity>;
         sizet vertNum = g.numOfVertices();
+        indext sourceIndex = g.indexOfVertex(source);
+        indext endIndex = g.indexOfVertex(end);
         // Initialize paths.
         std::vector<std::vector<PathNode>> paths(vertNum, std::vector<PathNode>(vertNum));
         for (indext i = 0; i < vertNum; i++) {
@@ -189,17 +190,9 @@ namespace ShortestPath
                 }
             }
         }
-
-        // Print shortest paths.
+        // Print the shortest path.
         if (out != nullptr) {
-            if (vertNum == 0) {
-                (*out) << "无顶点" << std::endl;
-                return;
-            }
-            for (indext i = 0; i < vertNum; i++) {
-                printPath(g._vertices, paths[i], i, *out);
-                (*out) << std::endl;
-            }
+            printPath(g._vertices, paths[sourceIndex], sourceIndex, endIndex, *out);
         }
     }
 }

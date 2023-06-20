@@ -132,18 +132,18 @@ namespace Menu
             {
                 ShowCursor();
                 std::cout << "最短路径\n";
-                std::cout << "请输入源点：";
-                int source;
+                std::cout << "请输入源点和终点：";
+                int source, end;
                 while (true) {
-                    std::cin >> source;
+                    std::cin >> source >> end;
                     validInput = !std::cin.fail();
                     ClearBuffer();
                     if (validInput) { break; }
-                    std::cout << "输入有误，请重新输入源点：";
+                    std::cout << "输入有误，请重新输入源点和终点：";
                 }
                 HideCursor();
 
-                S1::ShortestPath(g, source);
+                S1::ShortestPath(g, source, end);
 
                 system("pause");
                 break;

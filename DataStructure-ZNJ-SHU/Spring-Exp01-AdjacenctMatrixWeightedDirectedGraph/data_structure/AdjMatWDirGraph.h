@@ -59,12 +59,13 @@ public:
     /* Shortest Path Algorithm */
     template<class VertTy, class WeightTy, WeightTy infinity>
     friend void ShortestPath::Dijkstra(const AdjMatWDirGraph<VertTy, WeightTy, infinity>& g,
-        const VertTy& source, std::ostream* out);
+        const VertTy& source, const VertTy& end, std::ostream* out);
     template<class VertTy, class WeightTy, WeightTy infinity>
     friend void ShortestPath::BellmanFord(const AdjMatWDirGraph<VertTy, WeightTy, infinity>& g,
-        const VertTy& source, std::ostream* out);
+        const VertTy& source, const VertTy& end, std::ostream* out);
     template<class VertTy, class WeightTy, WeightTy infinity>
-    friend void ShortestPath::FloydWarshall(const AdjMatWDirGraph<VertTy, WeightTy, infinity>& g, std::ostream* out);
+    friend void ShortestPath::FloydWarshall(const AdjMatWDirGraph<VertTy, WeightTy, infinity>& g,
+        const VertTy& source, const VertTy& end, std::ostream* out);
 
     /* Output */
     void printAdjMatrix(std::ostream& out = std::cout) const;
