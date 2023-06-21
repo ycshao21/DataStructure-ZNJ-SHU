@@ -1,29 +1,29 @@
 #include<iostream>
 #include<conio.h>
-#include"data_structure/AdjMatWDirGraph.h"
-#include"solutions/S1_Solutions.h"
-#include"../../Tools/Settings.hpp"
+#include"data_structure/AdjListWUndirGraph.h"
+#include"solutions/S2_Solutions.h"
+#include"../Tools/Settings.hpp"
 
 namespace Menu
 {
-    void AdjMatWDirGraphTest() {
-        static AdjMatWDirGraph<int, int> g;
+    void AdjListWUndirGraphTest() {
+        static AdjListWUndirGraph<int, int> g;
         char key;
         bool validInput;
         while (true) {
             system("cls");
             HideCursor();
-            std::cout << "春-实验一 有向网的邻接矩阵验证及拓展\n" << std::endl;
+            std::cout << "春-实验二 无向网的邻接表验证和拓展\n" << std::endl;
 
             std::cout << "边：\n";
             g.printEdges();
-            std::cout << "\n邻接矩阵：\n";
-            g.printAdjMatrix();
+            std::cout << "\n邻接表：\n";
+            g.printAdjList();
 
             std::cout << "\n[1] 插入顶点  [2] 删除顶点  [3] 插入边  [4] 删除边\n";
-            std::cout << "[5] 度数      [6] 最短路径  [7] 清空    [8] 返回上一级菜单\n" << std::endl;
+            std::cout << "[5] 度数  [6] 连通分量数  [7] 最小生成树  [8] 清空  [9] 返回上一级菜单\n" << std::endl;
 
-            while ((key = _getch()) < '1' && key > '8');
+            while ((key = _getch()) < '1' && key > '9');
 
             switch (key) {
             case '1':
@@ -41,7 +41,7 @@ namespace Menu
                 }
                 HideCursor();
 
-                S1::InsertVertex(g, v);
+                S2::InsertVertex(g, v);
 
                 system("pause");
                 break;
@@ -61,7 +61,7 @@ namespace Menu
                 }
                 HideCursor();
 
-                S1::EraseVertex(g, v);
+                S2::EraseVertex(g, v);
 
                 system("pause");
                 break;
@@ -81,7 +81,7 @@ namespace Menu
                 }
                 HideCursor();
 
-                S1::InsertEdge(g, from, to, weight);
+                S2::InsertEdge(g, from, to, weight);
 
                 system("pause");
                 break;
@@ -101,7 +101,7 @@ namespace Menu
                 }
                 HideCursor();
 
-                S1::EraseEdge(g, from, to);
+                S2::EraseEdge(g, from, to);
 
                 system("pause");
                 break;
@@ -121,16 +121,23 @@ namespace Menu
                 }
                 HideCursor();
 
-                S1::Degree(g, v);
+                S2::Degree(g, v);
 
                 system("pause");
                 break;
             }
             case '6':
             {
+                std::cout << "连通分量数\n";
+                //S2::ConnectedComponent(g);
+                system("pause");
+                break;
+            }
+
+            case '7':
+            {
                 ShowCursor();
-                std::cout << "最短路径\n";
-                std::cout << "请输入源点和终点：";
+                std::cout << "最小生成树\n";
                 int source, end;
                 while (true) {
                     std::cin >> source >> end;
@@ -141,17 +148,17 @@ namespace Menu
                 }
                 HideCursor();
 
-                S1::ShortestPath(g, source, end);
+                S2::MinimumSpanningTree(g);
 
                 system("pause");
                 break;
             }
-            case '7':
+            case '8':
             {
                 g.clear();
                 break;
             }
-            case '8':
+            case '9':
             {
                 return;
             }

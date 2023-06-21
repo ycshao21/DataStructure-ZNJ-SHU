@@ -63,6 +63,15 @@
     <ClInclude Include="Winter-Exp03-LiteratureAssistant\solutions\W3_Solution.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Spring-Exp02-AdjacenctListWeightedUndirectedGraph\data_structure\AdjListEdge.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spring-Exp02-AdjacenctListWeightedUndirectedGraph\data_structure\AdjListWUndirGraph.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spring-Exp02-AdjacenctListWeightedUndirectedGraph\solutions\S2_Solutions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Tools\Random.cpp">
@@ -102,6 +111,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Spring-Exp01-AdjacenctMatrixWeightedDirectedGraph\AdjMatWDirGraphTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Spring-Exp02-AdjacenctListWeightedUndirectedGraph\AdjListWUndirGraphTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
