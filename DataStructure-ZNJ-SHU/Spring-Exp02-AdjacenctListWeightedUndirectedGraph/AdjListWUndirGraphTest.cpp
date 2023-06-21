@@ -129,7 +129,7 @@ namespace Menu
             case '6':
             {
                 std::cout << "连通分量数\n";
-                //S2::ConnectedComponent(g);
+                S2::ConnectedComponent(g);
                 system("pause");
                 break;
             }

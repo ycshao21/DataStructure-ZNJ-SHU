@@ -64,11 +64,11 @@ namespace S2
     template<class VertTy, class WeightTy, WeightTy infinity>
     void ConnectedComponent(const AdjListWUndirGraph<VertTy, WeightTy, infinity>& g) {
         if (g.connected()) {
-            std::cout << "该图是连通图" << std::endl;
+            std::cout << "该图是连通图\n";
         } else {
-            std::cout << "该图不是连通图" << std::endl;
+            std::cout << "该图不是连通图\n";
         }
-        std::cout << "\n连通分量数：" << g.numOfConnectedComponent() << std::endl;
+        std::cout << "连通分量数：" << g.numOfConnectedComponent() << std::endl;
     }
 
     template<class VertTy, class WeightTy, WeightTy infinity>

@@ -245,19 +245,19 @@ template<class VertTy, class WeightTy, WeightTy infinity>
 void AdjMatWDirGraph<VertTy, WeightTy, infinity>::printAdjMatrix(std::ostream& out) const {
     if (_vertices.empty()) { return; }
     sizet width = 5;
-    out << std::setw(width) << "";
+    out << std::setw(width + 1) << "";
     for (const auto& v : _vertices) {
         out << std::setw(width) << v << " ";
     }
     out << std::endl;
 
-    out << std::setw(width) << "";
+    out << std::setw(width + 1) << "";
     for (const auto& v : _vertices) {
         out << "______";
     }
     out << std::endl;
     for (indext i = 0; i < _adjMat.size(); i++) {
-        out << std::setw(width - 1) << _vertices[i] << "|";
+        out << std::setw(width - 1) << _vertices[i] << " |";
         for (const auto& w : _adjMat[i]) {
             if (w == infinity) {
                 out << std::setw(width) << "inf" << " ";

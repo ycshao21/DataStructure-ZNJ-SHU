@@ -7,6 +7,7 @@
 #include<algorithm>
 #include<ranges>
 #include<sstream>
+#include<iomanip>
 #include"AdjListEdge.h"
 //#include"MinimumSpanningTree.h"
 #include"../../Tools/MyExceptions.h"
@@ -20,6 +21,16 @@ public:
     using sizet = size_t;
     using Edge = AdjListEdge<WeightTy>;
     using EdgeList = std::list<Edge>;
+private:
+    // For finding edge according to the toIndex.
+    class FindEdge
+    {
+    public:
+        FindEdge(indext toIndex) : _toIndex(toIndex) {}
+        bool operator()(const Edge& edge) const { return edge.toIndex == _toIndex; }
+    private:
+        indext _toIndex;
+    };
 public:
     AdjListWUndirGraph(sizet vertNum = 0) : _vertices(vertNum), _adjList(vertNum), _edgeNum(0) {}
     AdjListWUndirGraph(const std::vector<VertTy>& vertices);
@@ -60,10 +71,14 @@ public:
 
     /* Traversal */
 
-    void DFS_from(const VertTy& from, void (*traverse)(const VertTy&) = OutputVertex) const;
-    void DFS_wholeGraph(void (*visit)(const VertTy&) = OutputVertex) const;
-    void BFS_from(const VertTy& from, void (*traverse)(const VertTy&) = OutputVertex) const;
-    void BFS_wholeGraph(void (*visit)(const VertTy&) = OutputVertex) const;
+    // @brief Depth-first search from one vertex.
+    void DFS(const VertTy& from, void (*visit)(const VertTy&) = outputVertex) const;
+    // @brief Depth-first search for the whole graph.
+    void DFS(void (*visit)(const VertTy&) = outputVertex) const;
+    // @brief Breadth-first search from one vertex.
+    void BFS(const VertTy& from, void (*visit)(const VertTy&) = outputVertex) const;
+    // @brief Breadth-first search for the whole graph.
+    void BFS(void (*visit)(const VertTy&) = outputVertex) const;
 
     /* Minimum Spanning Tree */
 
@@ -77,33 +92,33 @@ public:
     /* Output */
 
     void printAdjList(std::ostream& out = std::cout) const;
-    void printVertices(std::ostream& out = std::cout) const;
     void printEdges(std::ostream& out = std::cout) const;
 private:
     std::vector<VertTy> _vertices;
     std::vector<EdgeList> _adjList;
     sizet _edgeNum;
+private:
+    indext indexOfVertex(const VertTy& vert) const;
+    void _dfs(indext sourceIndex, std::vector<uint8_t>& visited, void (*visit)(const VertTy&) = outputVertex) const;
+    void _bfs(indext sourceIndex, std::vector<uint8_t>& visited, void (*visit)(const VertTy&) = outputVertex) const;
+    static void outputVertex(const VertTy& vert) { std::cout << vert << " "; }
 
-    indext indexOfVertex(const VertTy& vert) const {
-        indext i = 0;
-        for (; i < _vertices.size(); i++) {
-            if (_vertices[i] == vert) {
-                break;
-            }
-        }
-        if (i == _vertices.size()) {
-            throw VertexNotFound();
-        }
-        return i;
-    }
-
-    static void OutputVertex(const VertTy& vert) { std::cout << vert << " "; }
-
-    void _dfs(indext fromIndex, std::vector<int>& visited, void (*visit)(const VertTy&) = nullptr) const;
-    void _bfs(indext fromIndex, std::vector<int>& visited, void (*visit)(const VertTy&) = nullptr) const;
-
-    //bool treeFindPath(indext prev, indext start, indext end, std::stack<MST_Edge>&) const;
+    //bool treeFindPath(indext prev, indext from, indext end, std::stack<MST_Edge>&) const;
 };
+
+template<class VertTy, class WeightTy, WeightTy infinity>
+auto AdjListWUndirGraph<VertTy, WeightTy, infinity>::indexOfVertex(const VertTy& vert) const -> indext {
+    indext i = 0;
+    for (; i < _vertices.size(); i++) {
+        if (_vertices[i] == vert) {
+            break;
+        }
+    }
+    if (i == _vertices.size()) {
+        throw VertexNotFound();
+    }
+    return i;
+}
 
 template<class VertTy, class WeightTy, WeightTy infinity>
 AdjListWUndirGraph<VertTy, WeightTy, infinity>::AdjListWUndirGraph(const std::vector<VertTy>& vertices) {
@@ -123,7 +138,7 @@ bool AdjListWUndirGraph<VertTy, WeightTy, infinity>::connected() const {
     if (_vertices.size() == 1) { return true; }
     if (_edgeNum < _vertices.size() - 1) { return false; }
     // If the graph can be wholly traversed from one vertex, it is connected.
-    std::vector<int> visited(_vertices.size(), 0);
+    std::vector<uint8_t> visited(_vertices.size(), 0);
     _bfs(0, visited, nullptr);
     return std::ranges::find(visited, 0) == visited.end();
 }
@@ -163,21 +178,16 @@ VertTy* AdjListWUndirGraph<VertTy, WeightTy, infinity>::firstAdjVertex(const Ver
 }
 
 template<class VertTy, class WeightTy, WeightTy infinity>
-const VertTy* AdjListWUndirGraph<VertTy, WeightTy, infinity>::nextAdjVertex(const VertTy& from, const VertTy& to) const {
+const VertTy* AdjListWUndirGraph<VertTy, WeightTy, infinity>::nextAdjVertex(const VertTy& from, const VertTy& after) const {
     indext fromIndex = indexOfVertex(from),
-        toIndex = indexOfVertex(to);
+        afterIndex = indexOfVertex(after);
     // Check if "to" is adjacent to "from".
-    auto edgeIter = _adjList[fromIndex].begin();
-    for (; edgeIter != _adjList[fromIndex].end(); edgeIter++) {
-        if (edgeIter->toIndex == toIndex) {
-            break;
-        }
-    }
+    auto edgeIter = std::ranges::find_if(_adjList[fromIndex], FindEdge(afterIndex));
     if (edgeIter == _adjList[fromIndex].end()) {
-        throw EdgeNotFound();
+        return nullptr;
     }
     // Move to the next adjacent vertex.
-    ++edgeIter;
+    edgeIter++;
     if (edgeIter == _adjList[fromIndex].end()) {
         return nullptr;
     }
@@ -186,21 +196,16 @@ const VertTy* AdjListWUndirGraph<VertTy, WeightTy, infinity>::nextAdjVertex(cons
 }
 
 template<class VertTy, class WeightTy, WeightTy infinity>
-VertTy* AdjListWUndirGraph<VertTy, WeightTy, infinity>::nextAdjVertex(const VertTy& from, const VertTy& to) {
+VertTy* AdjListWUndirGraph<VertTy, WeightTy, infinity>::nextAdjVertex(const VertTy& from, const VertTy& after) {
     auto const_this = const_cast<const Graph*>(this);
-    return const_cast<VertTy*>(const_this->nextAdjVertex(from, to));
+    return const_cast<VertTy*>(const_this->nextAdjVertex(from, after));
 }
 
 template<class VertTy, class WeightTy, WeightTy infinity>
 WeightTy AdjListWUndirGraph<VertTy, WeightTy, infinity>::getWeight(const VertTy& from, const VertTy& to) const {
     indext fromIndex = indexOfVertex(from),
         toIndex = indexOfVertex(to);
-    auto edgeIter = _adjList[fromIndex].begin();
-    for (; edgeIter != _adjList[fromIndex].end(); edgeIter++) {
-        if (edgeIter->toIndex == toIndex) {
-            break;
-        }
-    }
+    auto edgeIter = std::ranges::find_if(_adjList[fromIndex], FindEdge(toIndex));
     if (edgeIter != _adjList[fromIndex].end()) {
         return edgeIter->weight;
     }
@@ -222,11 +227,9 @@ void AdjListWUndirGraph<VertTy, WeightTy, infinity>::eraseVertex(const VertTy& v
     _edgeNum -= _adjList[vertIndex].size();
     for (indext fromIndex = 0; fromIndex < _adjList.size(); fromIndex++) {
         if (fromIndex == vertIndex) { continue; }
-        for (auto edgeIter = _adjList[fromIndex].begin(); edgeIter != _adjList[fromIndex].end(); edgeIter++) {
-            if (edgeIter->toIndex == vertIndex) {
-                _adjList[fromIndex].erase(edgeIter);
-                break;
-            }
+        auto edgeIter = std::ranges::find_if(_adjList[fromIndex], FindEdge(vertIndex));
+        if (edgeIter != _adjList[fromIndex].end()) {
+            _adjList[fromIndex].erase(edgeIter);
         }
     }
     indext lastIndex = _vertices.size() - 1;
@@ -234,6 +237,13 @@ void AdjListWUndirGraph<VertTy, WeightTy, infinity>::eraseVertex(const VertTy& v
         // Replace the vertex to be deleted with the last vertex
         _vertices[vertIndex] = std::move(_vertices[lastIndex]);
         _adjList[vertIndex] = std::move(_adjList[lastIndex]);
+        for (indext fromIndex = 0; fromIndex < lastIndex; fromIndex++) {
+            if (fromIndex == vertIndex) { continue; }
+            auto edgeIter = std::ranges::find_if(_adjList[fromIndex], FindEdge(lastIndex));
+            if (edgeIter != _adjList[fromIndex].end()) {
+                edgeIter->toIndex = vertIndex;
+            }
+        }
     }
     _vertices.pop_back();
     _adjList.pop_back();
@@ -249,26 +259,15 @@ void AdjListWUndirGraph<VertTy, WeightTy, infinity>::setWeight(const VertTy& fro
     if (fromIndex == toIndex) {
         throw EdgeNotFound();
     }
-
     // Modify the weight of the edge from "from" to "to".
-    auto fromIter = _adjList[fromIndex].begin();
-    for (; fromIter != _adjList[fromIndex].end(); fromIter++) {
-        if (fromIter->toIndex == toIndex) {
-            fromIter->weight = newWeight;
-            break;
-        }
-    }
+    auto fromIter = std::ranges::find_if(_adjList[fromIndex], FindEdge(toIndex));
     if (fromIter == _adjList[fromIndex].end()) {
         throw EdgeNotFound();
     }
-
+    fromIter->weight = newWeight;
     // Modify the weight of the edge from "to" to "from".
-    for (auto toIter = _adjList[toIndex].begin(); toIter != _adjList[toIndex].end(); toIter++) {
-        if (toIter->toIndex == fromIndex) {
-            toIter->weight = newWeight;
-            return;
-        }
-    }
+    auto toIter = std::ranges::find_if(_adjList[toIndex], FindEdge(fromIndex));
+    toIter->weight = newWeight;
 }
 
 template<class VertTy, class WeightTy, WeightTy infinity>
@@ -282,11 +281,8 @@ void AdjListWUndirGraph<VertTy, WeightTy, infinity>::insertEdge(const VertTy& fr
         throw IllegalParameterValue("Loop is not allowed.");
     }
     // Check if the edge already exists.
-    auto fromIter = _adjList[fromIndex].begin();
-    for (; fromIter != _adjList[fromIndex].end(); fromIter++) {
-        if (fromIter->toIndex == toIndex) {
-            throw EdgeAlreadyExists();
-        }
+    if (std::ranges::find_if(_adjList[fromIndex], FindEdge(toIndex)) != _adjList[fromIndex].end()) {
+        throw EdgeAlreadyExists();
     }
     // Insert the edge at the front of the list.
     _adjList[fromIndex].push_front(Edge{ toIndex, weight });
@@ -301,130 +297,104 @@ void AdjListWUndirGraph<VertTy, WeightTy, infinity>::eraseEdge(const VertTy& fro
     if (fromIndex == toIndex) {
         throw EdgeNotFound();
     }
-    // Check if the edge exists.
-    auto fromIter = _adjList[fromIndex].begin();
-    for (; fromIter != _adjList[fromIndex].end(); fromIter++) {
-        if (fromIter->toIndex == toIndex) {
-            break;
-        }
-    }
+    // Erase (from, to).
+    auto fromIter = std::ranges::find_if(_adjList[fromIndex], FindEdge(toIndex));
     if (fromIter == _adjList[fromIndex].end()) {
         throw EdgeNotFound();
     }
-    // Erase (from, to).
     _adjList[fromIndex].erase(fromIter);
     // Erase (to, from).
-    for (auto toIter = _adjList[toIndex].begin(); toIter != _adjList[toIndex].end(); toIter++) {
-        if (toIter->toIndex == fromIndex) {
-            _adjList[toIndex].erase(toIter);
-            break;
-        }
-    }
+    auto toIter = std::ranges::find_if(_adjList[toIndex], FindEdge(fromIndex));
+    _adjList[toIndex].erase(toIter);
     _edgeNum--;
 }
 
-/* Look up */
-
 template<class VertTy, class WeightTy, WeightTy infinity>
-void AdjListWUndirGraph<VertTy, WeightTy, infinity>::
-_dfs(indext fromIndex, std::vector<int>& visited, void (*visit)(const VertTy&)) const {
+void AdjListWUndirGraph<VertTy, WeightTy, infinity>::_dfs(indext sourceIndex,
+    std::vector<uint8_t>& visited, void (*visit)(const VertTy&)) const
+{
     // Visit the current vertex:
-    visited[fromIndex] = 1;
+    visited[sourceIndex] = 1;
     if (visit != nullptr) {
-        (*visit)(_adjList[fromIndex].value);
+        (*visit)(_vertices[sourceIndex]);
     }
-    // Visit its adjacent vertices:
-    for (const auto& edge : _adjList[fromIndex].edges) {
-        if (visited[edge.vertIndex] == 0) {
-            _dfs(edge.vertIndex, visited, visit);
+    // Visit its unvisited adjacent vertices:
+    for (const auto& edge : _adjList[sourceIndex]) {
+        if (visited[edge.toIndex] == 0) {
+            _dfs(edge.toIndex, visited, visit);
         }
     }
 }
 
 template<class VertTy, class WeightTy, WeightTy infinity>
-void AdjListWUndirGraph<VertTy, WeightTy, infinity>::
-_bfs(indext fromIndex, std::vector<int>& visited, void (*visit)(const VertTy&)) const {
-    std::queue<indext> vertices;
-    // Visit the starting vertex:
-    visited[fromIndex] = 1;
+void AdjListWUndirGraph<VertTy, WeightTy, infinity>::_bfs(indext sourceIndex,
+    std::vector<uint8_t>& visited, void (*visit)(const VertTy&)) const
+{
+    std::queue<indext> vertQueue;
+    // Visit the current vertex:
+    visited[sourceIndex] = 1;
     if (visit != nullptr) {
-        (*visit)(_adjList[fromIndex].value);
+        (*visit)(_vertices[sourceIndex]);
     }
-    vertices.push(fromIndex);
-    while (!vertices.empty()) {
-        indext curIndex = vertices.front();
-        vertices.pop();
+    vertQueue.push(sourceIndex);
+    while (!vertQueue.empty()) {
+        indext curIndex = vertQueue.front();
+        vertQueue.pop();
         // Visit its adjacent vertices:
-        for (auto edge : _adjList[curIndex].edges) {
-            indext adjIndex = edge.vertIndex;
+        for (const auto& edge : _adjList[curIndex]) {
+            indext adjIndex = edge.toIndex;
             if (visited[adjIndex] == 0) {
                 visited[adjIndex] = 1;
                 if (visit != nullptr) {
-                    (*visit)(_adjList[adjIndex].value);
+                    (*visit)(_vertices[adjIndex]);
                 }
-                vertices.push(adjIndex);
+                vertQueue.push(adjIndex);
             }
         }
     }
 }
 
 template<class VertTy, class WeightTy, WeightTy infinity>
-void AdjListWUndirGraph<VertTy, WeightTy, infinity>::
-DFS_from(const VertTy& start, void (*visit)(const VertTy&)) const {
-    std::vector<int> visited(_adjList.size(), 0);
-    // Find startVert:
-    auto vertIt = std::ranges::find_if(_adjList, FindVert(start));
-    if (vertIt == _adjList.end()) {
-        throw VertexNotFound("startVert not found.");
-    }
-    indext fromIndex = vertIt - _adjList.begin();
+void AdjListWUndirGraph<VertTy, WeightTy, infinity>::DFS(const VertTy& source, void (*visit)(const VertTy&)) const {
+    indext fromIndex = indexOfVertex(source);
+    std::vector<uint8_t> visited(_vertices.size(), 0);
     _dfs(fromIndex, visited, visit);
 }
 
 template<class VertTy, class WeightTy, WeightTy infinity>
-void AdjListWUndirGraph<VertTy, WeightTy, infinity>::
-DFS_wholeGraph(void (*visit)(const VertTy&)) const {
-    std::vector<int> visited(_adjList.size(), 0);
-    for (indext vertIndex = 0; vertIndex < _adjList.size(); vertIndex++) {
-        if (visited[vertIndex] == 0) {
-            _dfs(vertIndex, visited, visit);
+void AdjListWUndirGraph<VertTy, WeightTy, infinity>::DFS(void (*visit)(const VertTy&)) const {
+    std::vector<uint8_t> visited(_vertices.size(), 0);
+    for (indext fromIndex = 0; fromIndex < _vertices.size(); fromIndex++) {
+        if (visited[fromIndex] == 0) {
+            _dfs(fromIndex, visited, visit);
         }
     }
 }
 
 template<class VertTy, class WeightTy, WeightTy infinity>
-void AdjListWUndirGraph<VertTy, WeightTy, infinity>::
-BFS_from(const VertTy& start, void (*visit)(const VertTy&)) const {
-    std::vector<int> visited(_adjList.size(), 0);
-    // Find startVert:
-    auto vertIt = std::ranges::find_if(_adjList, FindVert(start));
-    if (vertIt == _adjList.end()) {
-        throw VertexNotFound("startVert not found.");
-    }
-    indext fromIndex = vertIt - _adjList.begin();
+void AdjListWUndirGraph<VertTy, WeightTy, infinity>::BFS(const VertTy& source, void (*visit)(const VertTy&)) const {
+    indext fromIndex = indexOfVertex(source);
+    std::vector<uint8_t> visited(_vertices.size(), 0);
     _bfs(fromIndex, visited, visit);
 }
 
 template<class VertTy, class WeightTy, WeightTy infinity>
-void AdjListWUndirGraph<VertTy, WeightTy, infinity>::
-BFS_wholeGraph(void (*visit)(const VertTy&)) const {
-    std::vector<int> visited(_adjList.size(), 0);
-    for (indext vertIndex = 0; vertIndex < _adjList.size(); vertIndex++) {
-        if (visited[vertIndex] == 0) {
-            _bfs(vertIndex, visited, visit);
+void AdjListWUndirGraph<VertTy, WeightTy, infinity>::BFS(void (*visit)(const VertTy&)) const {
+    std::vector<uint8_t> visited(_vertices.size(), 0);
+    for (indext fromIndex = 0; fromIndex < _vertices.size(); fromIndex++) {
+        if (visited[fromIndex] == 0) {
+            _bfs(fromIndex, visited, visit);
         }
     }
 }
 
-///* Function required */
-//
 //template<class VertTy, class WeightTy, WeightTy infinity>
-//bool AdjListWUndirGraph<VertTy, WeightTy, infinity>::treeFindPath(indext prev, indext start, indext end, std::stack<Edge>& prev) const {
-//    if (start == end) { return true; }
-//    for (const auto& e : _adjList[start].edges) {
+//bool AdjListWUndirGraph<VertTy, WeightTy, infinity>::treeFindPath(indext prev, indext from, indext end, std::stack<Edge>& prev) const {
+//    if (from == end) { return true; }
+//    for (const auto& e : _adjList[from].edges) {
 //        if (e.vertIndex == prev) { continue; }
-//        prev.emplace(start, e.vertIndex, e.weight);
-//        if (treeFindPath(start, e.vertIndex, end, prev)) {
+//        prev.emplace(from, e.vertIndex, e.weight);
+//        if (treeFindPath(from, e.vertIndex, end, prev)) {
 //            return true;
 //        }
 //        prev.pop();
@@ -495,18 +465,11 @@ bool AdjListWUndirGraph<VertTy, WeightTy, infinity>::hasUniqueMST() const {
 template<class VertTy, class WeightTy, WeightTy infinity>
 void AdjListWUndirGraph<VertTy, WeightTy, infinity>::printAdjList(std::ostream& out) const {
     for (indext fromIndex = 0; fromIndex < _vertices.size(); fromIndex++) {
-        out << _vertices[fromIndex] << " | ";
+        out << std::setw(4) << _vertices[fromIndex] << " | ";
         for (const auto& e : _adjList[fromIndex]) {
             out << _vertices[e.toIndex] << "(" << e.weight << ") -> ";
         }
         out << "end" << std::endl;
-    }
-}
-
-template<class VertTy, class WeightTy, WeightTy infinity>
-void AdjListWUndirGraph<VertTy, WeightTy, infinity>::printVertices(std::ostream& out) const {
-    for (indext i = 0; i < _vertices.size(); i++) {
-        out << "(" << (i + 1) << ") " << _vertices[i] << "\n";
     }
 }
 
