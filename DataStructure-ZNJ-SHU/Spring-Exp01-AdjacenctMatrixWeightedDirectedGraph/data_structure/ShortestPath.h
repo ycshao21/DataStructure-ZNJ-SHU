@@ -38,7 +38,7 @@ namespace ShortestPath
         indext sourceIndex, indext endIndex, std::ostream& out) {
         std::stack<indext> st;
         if (paths[endIndex].dist == infinity) {
-            out << "无路径" << std::endl;
+            out << "No Path." << std::endl;
             return;
         }
         indext curIndex = endIndex;
@@ -47,12 +47,12 @@ namespace ShortestPath
             curIndex = paths[curIndex].prev;
         }
         // Print the path.
-        out << "最短路径：" << vertices[sourceIndex];
+        out << "The shortest path: " << vertices[sourceIndex];
         while (!st.empty()) {
             out << "->" << vertices[st.top()];
             st.pop();
         }
-        out << "\n长度：" << paths[endIndex].dist << std::endl;
+        out << "\nLength: " << paths[endIndex].dist << std::endl;
     }
 
     template<class VertTy, class WeightTy, WeightTy infinity>

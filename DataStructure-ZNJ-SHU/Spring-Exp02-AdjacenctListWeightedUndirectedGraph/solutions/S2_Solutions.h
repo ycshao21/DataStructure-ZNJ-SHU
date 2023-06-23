@@ -1,4 +1,5 @@
 #pragma once
+#include<sstream>
 #include"../data_structure/AdjListWUndirGraph.h"
 
 namespace S2
@@ -63,31 +64,48 @@ namespace S2
 
     template<class VertTy, class WeightTy, WeightTy infinity>
     void ConnectedComponent(const AdjListWUndirGraph<VertTy, WeightTy, infinity>& g) {
-        if (g.connected()) {
-            std::cout << "该图是连通图\n";
-        } else {
-            std::cout << "该图不是连通图\n";
+        try {
+            if (g.connected()) {
+                std::cout << "该图是连通图\n";
+            } else {
+                std::cout << "该图不是连通图\n";
+            }
+            std::cout << "连通分量数：" << g.numOfConnectedComponent() << std::endl;
+        } catch (NoVertex) {
+            std::cout << "无顶点" << std::endl;
         }
-        std::cout << "连通分量数：" << g.numOfConnectedComponent() << std::endl;
     }
 
     template<class VertTy, class WeightTy, WeightTy infinity>
     void MinimumSpanningTree(const AdjListWUndirGraph<VertTy, WeightTy, infinity>& g) {
-        if (g.hasUniqueMST()) {
-            std::cout << "该图有唯一最小生成树" << std::endl;
-        } else {
-            std::cout << "该图有多个最小生成树" << std::endl;
+        try {
+            if (g.hasUniqueMST()) {
+                std::cout << "该图有唯一最小生成树" << std::endl;
+            } else {
+                std::cout << "该图有多个最小生成树" << std::endl;
+            }
+        } catch (NoVertex) {
+            std::cout << "无顶点" << std::endl;
+            return;
+        } catch (GraphDisconnected) {
+            std::cout << "非连通图，无法计算最小生成树" << std::endl;
+            return;
         }
         std::cout << "-----------\n";
         std::cout << "| Kruskal |\n";
         std::cout << "-----------" << std::endl;
+        MST::Kruskal(g);
+        std::cout << std::endl;
 
         std::cout << "--------\n";
         std::cout << "| Prim |\n";
         std::cout << "--------" << std::endl;
+        MST::Prim(g);
+        std::cout << std::endl;
 
         std::cout << "------------------\n";
         std::cout << "| Reverse-Delete |\n";
         std::cout << "------------------" << std::endl;
+        MST::ReverseDelete(g);
     }
 }

@@ -2,53 +2,40 @@
 #include<vector>
 #include<list>
 #include<queue>
-#include<unordered_set>
-#include<stack>
 #include<algorithm>
 #include<ranges>
-#include<sstream>
 #include<iomanip>
+#include<limits>
 #include"AdjListEdge.h"
-//#include"MinimumSpanningTree.h"
+#include"MinimumSpanningTree.h"
 #include"../../Tools/MyExceptions.h"
 
 template<class VertTy = int, class WeightTy = int, WeightTy infinity = std::numeric_limits<WeightTy>::max()>
 class AdjListWUndirGraph
 {
-public:
     using Graph = AdjListWUndirGraph<VertTy, WeightTy, infinity>;
     using indext = size_t;
     using sizet = size_t;
     using Edge = AdjListEdge<WeightTy>;
     using EdgeList = std::list<Edge>;
-private:
-    // For finding edge according to the toIndex.
-    class FindEdge
-    {
-    public:
-        FindEdge(indext toIndex) : _toIndex(toIndex) {}
-        bool operator()(const Edge& edge) const { return edge.toIndex == _toIndex; }
-    private:
-        indext _toIndex;
-    };
 public:
     AdjListWUndirGraph(sizet vertNum = 0) : _vertices(vertNum), _adjList(vertNum), _edgeNum(0) {}
     AdjListWUndirGraph(const std::vector<VertTy>& vertices);
     AdjListWUndirGraph(const Graph&) = default;
+    AdjListWUndirGraph(Graph&&) = default;
     Graph& operator=(const Graph&) = default;
     ~AdjListWUndirGraph() = default;
 
     /* Status */
 
-    bool empty() const { return _vertices.empty(); }
-    sizet numOfvertices() const { return _vertices.size(); }
+    sizet numOfVertices() const { return _vertices.size(); }
     sizet numOfEdges() const { return _edgeNum; }
     bool connected() const;
     sizet numOfConnectedComponent() const;
-    bool hasUniqueMST() const;
+    bool hasUniqueMST() const { return MST::isUnique(*this); }
 
     /* Element Access */
-
+public:
     sizet degree(const VertTy& vert) const;
 
     const VertTy* firstAdjVertex(const VertTy& from) const;
@@ -58,9 +45,11 @@ public:
 
     WeightTy getWeight(const VertTy& from, const VertTy& to) const;
     WeightTy getInfinity() const { return infinity; }
+private:
+    indext indexOfVertex(const VertTy& vert) const;
 
     /* Modifier */
-
+public:
     void clear() { _vertices.clear(), _adjList.clear(), _edgeNum = 0; }
     void setVertex(const VertTy& oldVert, const VertTy& newVert) { _vertices[indexOfVertex(oldVert)] = newVert; }
     void insertVertex(const VertTy& vert);
@@ -70,7 +59,7 @@ public:
     void eraseEdge(const VertTy& from, const VertTy& to);
 
     /* Traversal */
-
+public:
     // @brief Depth-first search from one vertex.
     void DFS(const VertTy& from, void (*visit)(const VertTy&) = outputVertex) const;
     // @brief Depth-first search for the whole graph.
@@ -79,46 +68,45 @@ public:
     void BFS(const VertTy& from, void (*visit)(const VertTy&) = outputVertex) const;
     // @brief Breadth-first search for the whole graph.
     void BFS(void (*visit)(const VertTy&) = outputVertex) const;
-
-    /* Minimum Spanning Tree */
-
-    //template<class VertTy, class WeightTy, WeightTy infinity>
-    //friend WeightTy MST::Kruskal(const AdjListWUndirGraph<VertTy, WeightTy, infinity>& g, std::ostream* out = &std::cout);
-    //template<class VertTy, class WeightTy, WeightTy infinity>
-    //friend WeightTy MST::Prim(const AdjListWUndirGraph<VertTy, WeightTy, infinity>& g, std::ostream* out = &std::cout);
-    //template<class VertTy, class WeightTy, WeightTy infinity>
-    //friend WeightTy MST::ReverseDelete(const AdjListWUndirGraph<VertTy, WeightTy, infinity>& g, std::ostream* out = &std::cout);
-
-    /* Output */
-
-    void printAdjList(std::ostream& out = std::cout) const;
-    void printEdges(std::ostream& out = std::cout) const;
 private:
-    std::vector<VertTy> _vertices;
-    std::vector<EdgeList> _adjList;
-    sizet _edgeNum;
-private:
-    indext indexOfVertex(const VertTy& vert) const;
     void _dfs(indext sourceIndex, std::vector<uint8_t>& visited, void (*visit)(const VertTy&) = outputVertex) const;
     void _bfs(indext sourceIndex, std::vector<uint8_t>& visited, void (*visit)(const VertTy&) = outputVertex) const;
     static void outputVertex(const VertTy& vert) { std::cout << vert << " "; }
 
-    //bool treeFindPath(indext prev, indext from, indext end, std::stack<MST_Edge>&) const;
-};
+    /* Minimum Spanning Tree */
+public:
+    template<class VertTy, class WeightTy, WeightTy infinity>
+    friend WeightTy MST::Kruskal(const AdjListWUndirGraph<VertTy, WeightTy, infinity>& g, std::ostream* out);
+    template<class VertTy, class WeightTy, WeightTy infinity>
+    friend WeightTy MST::Prim(const AdjListWUndirGraph<VertTy, WeightTy, infinity>& g, std::ostream* out);
+    template<class VertTy, class WeightTy, WeightTy infinity>
+    friend WeightTy MST::ReverseDelete(const AdjListWUndirGraph<VertTy, WeightTy, infinity>& g, std::ostream* out);
+private:
+    template<class VertTy, class WeightTy, WeightTy infinity>
+    friend bool MST::treeFindPath(const AdjListWUndirGraph<VertTy, WeightTy, infinity>& tree,
+        indext prevIndex, indext fromIndex, indext endIndex, std::stack<MST_Edge<WeightTy>>& path);
+    template<class VertTy, class WeightTy, WeightTy infinity>
+    friend bool MST::isUnique(const AdjListWUndirGraph<VertTy, WeightTy, infinity>& g);
 
-template<class VertTy, class WeightTy, WeightTy infinity>
-auto AdjListWUndirGraph<VertTy, WeightTy, infinity>::indexOfVertex(const VertTy& vert) const -> indext {
-    indext i = 0;
-    for (; i < _vertices.size(); i++) {
-        if (_vertices[i] == vert) {
-            break;
-        }
-    }
-    if (i == _vertices.size()) {
-        throw VertexNotFound();
-    }
-    return i;
-}
+    /* Output */
+public:
+    void printAdjList(std::ostream& out = std::cout) const;
+    void printEdges(std::ostream& out = std::cout) const;
+
+private:
+    std::vector<VertTy> _vertices;
+    std::vector<EdgeList> _adjList;
+    sizet _edgeNum;
+
+    class FindEdge  // For finding edge according to the toIndex.
+    {
+    public:
+        FindEdge(indext toIndex) : _toIndex(toIndex) {}
+        bool operator()(const Edge& edge) const { return edge.toIndex == _toIndex; }
+    private:
+        indext _toIndex;
+    };
+};
 
 template<class VertTy, class WeightTy, WeightTy infinity>
 AdjListWUndirGraph<VertTy, WeightTy, infinity>::AdjListWUndirGraph(const std::vector<VertTy>& vertices) {
@@ -134,7 +122,9 @@ AdjListWUndirGraph<VertTy, WeightTy, infinity>::AdjListWUndirGraph(const std::ve
 
 template<class VertTy, class WeightTy, WeightTy infinity>
 bool AdjListWUndirGraph<VertTy, WeightTy, infinity>::connected() const {
-    if (_vertices.empty()) { return false; }
+    if (_vertices.empty()) {
+        throw NoVertex();
+    }
     if (_vertices.size() == 1) { return true; }
     if (_edgeNum < _vertices.size() - 1) { return false; }
     // If the graph can be wholly traversed from one vertex, it is connected.
@@ -145,6 +135,9 @@ bool AdjListWUndirGraph<VertTy, WeightTy, infinity>::connected() const {
 
 template<class VertTy, class WeightTy, WeightTy infinity>
 size_t AdjListWUndirGraph<VertTy, WeightTy, infinity>::numOfConnectedComponent() const {
+    if (_vertices.empty()) {
+        throw NoVertex();
+    }
     // The number of connected components is equal to the number of times of traversal.
     sizet cnt = 0;
     std::vector<uint8_t> visited(_vertices.size(), 0);
@@ -210,6 +203,20 @@ WeightTy AdjListWUndirGraph<VertTy, WeightTy, infinity>::getWeight(const VertTy&
         return edgeIter->weight;
     }
     return infinity;
+}
+
+template<class VertTy, class WeightTy, WeightTy infinity>
+auto AdjListWUndirGraph<VertTy, WeightTy, infinity>::indexOfVertex(const VertTy& vert) const -> indext {
+    indext i = 0;
+    for (; i < _vertices.size(); i++) {
+        if (_vertices[i] == vert) {
+            break;
+        }
+    }
+    if (i == _vertices.size()) {
+        throw VertexNotFound();
+    }
+    return i;
 }
 
 template<class VertTy, class WeightTy, WeightTy infinity>
@@ -387,80 +394,6 @@ void AdjListWUndirGraph<VertTy, WeightTy, infinity>::BFS(void (*visit)(const Ver
         }
     }
 }
-
-//template<class VertTy, class WeightTy, WeightTy infinity>
-//bool AdjListWUndirGraph<VertTy, WeightTy, infinity>::treeFindPath(indext prev, indext from, indext end, std::stack<Edge>& prev) const {
-//    if (from == end) { return true; }
-//    for (const auto& e : _adjList[from].edges) {
-//        if (e.vertIndex == prev) { continue; }
-//        prev.emplace(from, e.vertIndex, e.weight);
-//        if (treeFindPath(from, e.vertIndex, end, prev)) {
-//            return true;
-//        }
-//        prev.pop();
-//    }
-//    return false;
-//}
-
-template<class VertTy, class WeightTy, WeightTy infinity>
-bool AdjListWUndirGraph<VertTy, WeightTy, infinity>::hasUniqueMST() const {
-    ////if (_adjList.empty()) {
-    ////    throw EmptyGraph();
-    ////}
-    ////if (_adjList.size() == 1) { return true; }
-    ////if (!this->connected()) {
-    ////    throw GraphDisconnected();
-    ////}
-    ////// Use Kruskal algorithm to find an MST and store the discarded edges:
-    ////DisjointSet vertSet(_adjList.size());
-    ////std::priority_queue<MST_Edge, std::vector<MST_Edge>,
-    ////    std::greater<MST_Edge>> minHeap;
-    ////for (indext i = 0; i < _adjList.size() - 1; i++) {
-    ////    for (const auto& e : _adjList[i].edges) {
-    ////        if (i < e.vertIndex) {
-    ////            minHeap.emplace(i, e.vertIndex, e.weight);
-    ////        }
-    ////    }
-    ////}
-    ////// Initialize another graph for MST:
-    ////Graph MST;
-    ////for (const auto& v : _adjList) {
-    ////    MST.insertVertex(v.value);
-    ////}
-    ////// Find edges:
-    ////std::vector<MST_Edge> discardedEdges;
-    ////for (indext cnt = 0; cnt < _adjList.size() - 1;) {
-    ////    MST_Edge curEdge = minHeap.top();
-    ////    minHeap.pop();
-    ////    int v1Root = vertSet.findRoot(curEdge.from);
-    ////    int v2Root = vertSet.findRoot(curEdge.to);
-    ////    if (v1Root != v2Root) {
-    ////        vertSet.unite(v1Root, v2Root);
-    ////        cnt++;
-    ////        MST.insertEdge(MST._adjList[curEdge.from].value,
-    ////            MST._adjList[curEdge.to].value, curEdge.weight);
-    ////    } else {
-    ////        discardedEdges.push_back(curEdge);
-    ////    }
-    ////}
-    ////while (!minHeap.empty()) {
-    ////    discardedEdges.push_back(minHeap.top());
-    ////    minHeap.pop();
-    ////}
-    ////// Check if the weight of any discarded edge is greater than
-    ////// other edges in the circle formed with the edge:
-    ////std::stack<MST_Edge> prev;
-    ////for (const auto& e : discardedEdges) {
-    ////    MST.treeFindPath(-1, e.vert1, e.vert2, prev);
-    ////    while (!prev.empty()) {
-    ////        if (e.weight <= prev.top().weight) { return false; }
-    ////        prev.pop();
-    ////    }
-    ////}
-    return true;
-}
-
-/* Output */
 
 template<class VertTy, class WeightTy, WeightTy infinity>
 void AdjListWUndirGraph<VertTy, WeightTy, infinity>::printAdjList(std::ostream& out) const {

@@ -25,6 +25,8 @@
     <ClInclude Include="Spring-Exp01-AdjacenctMatrixWeightedDirectedGraph\data_structure\SquareMatrix.h" />
     <ClInclude Include="Spring-Exp02-AdjacenctListWeightedUndirectedGraph\data_structure\AdjListEdge.h" />
     <ClInclude Include="Spring-Exp02-AdjacenctListWeightedUndirectedGraph\data_structure\AdjListWUndirGraph.h" />
+    <ClInclude Include="Spring-Exp02-AdjacenctListWeightedUndirectedGraph\data_structure\DisjointSet.h" />
+    <ClInclude Include="Spring-Exp02-AdjacenctListWeightedUndirectedGraph\data_structure\MinimumSpanningTree.h" />
     <ClInclude Include="Spring-Exp02-AdjacenctListWeightedUndirectedGraph\solutions\S2_Solutions.h" />
     <ClInclude Include="Tools\MyExceptions.h" />
     <ClInclude Include="Tools\Random.hpp" />

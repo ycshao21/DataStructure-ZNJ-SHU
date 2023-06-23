@@ -39,10 +39,10 @@ private:
 
 /* Graph */
 
-class EmptyGraph
+class NoVertex
 {
 public:
-    EmptyGraph(std::string theMessage = "Empty graph.") {
+    NoVertex(std::string theMessage = "Empty graph.") {
         message = theMessage;
     }
     void outputMessage() { std::cout << message << std::endl; }

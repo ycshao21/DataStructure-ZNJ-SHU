@@ -138,18 +138,7 @@ namespace Menu
             {
                 ShowCursor();
                 std::cout << "最小生成树\n";
-                int source, end;
-                while (true) {
-                    std::cin >> source >> end;
-                    validInput = !std::cin.fail();
-                    ClearBuffer();
-                    if (validInput) { break; }
-                    std::cout << "输入有误，请重新输入源点和终点：";
-                }
-                HideCursor();
-
                 S2::MinimumSpanningTree(g);
-
                 system("pause");
                 break;
             }

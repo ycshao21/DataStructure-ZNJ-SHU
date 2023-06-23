@@ -1,4 +1,5 @@
 #pragma once
+#include<iostream>
 #include<vector>
 #include<algorithm>
 #include<limits>
@@ -25,7 +26,6 @@ public:
 
     /* Status */
 
-    bool empty() const { return _vertices.empty(); }
     sizet numOfVertices() const { return _vertices.size(); }
     sizet numOfEdges() const { return _edgeNum; }
 
@@ -58,9 +58,11 @@ public:
     template<class VertTy, class WeightTy, WeightTy infinity>
     friend void ShortestPath::Dijkstra(const AdjMatWDirGraph<VertTy, WeightTy, infinity>& g,
         const VertTy& source, const VertTy& end, std::ostream* out);
+
     template<class VertTy, class WeightTy, WeightTy infinity>
     friend void ShortestPath::BellmanFord(const AdjMatWDirGraph<VertTy, WeightTy, infinity>& g,
         const VertTy& source, const VertTy& end, std::ostream* out);
+
     template<class VertTy, class WeightTy, WeightTy infinity>
     friend void ShortestPath::FloydWarshall(const AdjMatWDirGraph<VertTy, WeightTy, infinity>& g,
         const VertTy& source, const VertTy& end, std::ostream* out);
