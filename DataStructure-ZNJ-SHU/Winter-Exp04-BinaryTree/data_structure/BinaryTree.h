@@ -13,27 +13,27 @@ struct BinaryTreeNode
 };
 
 template<class _Ty>
-class BinaryTreeTest
+class BinaryTree
 {
     using Node = BinaryTreeNode<_Ty>;
-    using Tree = BinaryTreeTest<_Ty>;
+    using Tree = BinaryTree<_Ty>;
     using sizet = size_t;
     using indext = size_t;
 public:
     // @brief Construct an empty binary tree.
-    BinaryTreeTest() :rt(nullptr), treeSize(0) {}
+    BinaryTree() :rt(nullptr), treeSize(0) {}
     /**
      * @brief Copy constructor.
      * @param tree Another tree to be copied.
     */
-    BinaryTreeTest(const Tree& Tree) : rt(copyTree(Tree.rt)), treeSize(Tree.treeSize) {}
+    BinaryTree(const Tree& Tree) : rt(copyTree(Tree.rt)), treeSize(Tree.treeSize) {}
     /**
      * @brief Copy assignment operator.
      * @param tree Another tree to be copied.
     */
     Tree& operator=(const Tree& Tree);
     // @brief Destructor.
-    ~BinaryTreeTest() { clear(); }
+    ~BinaryTree() { clear(); }
 
     // @brief Check if the tree is empty.
     bool empty() const { return treeSize == 0; }
@@ -51,14 +51,6 @@ public:
      * @param right Right subtree.
     */
     void makeTree(const _Ty& element, const Tree& left, const Tree& right);
-    /**
-     * @brief Combine two subtrees and an element to make a new tree.
-     * @param element Parent of the two subtrees.
-     * @param left Left subtree.
-     * @param right Right subtree.
-    */
-    void makeTree(_Ty&& element, Tree&& left, Tree&& right);
-
     // @brief Swap all the left and right children in the tree.
     void revolute() { revolute(rt); }
     // @brief Remove all the elements in the tree.
@@ -86,7 +78,7 @@ public:
     void levelOrder(void (*v)(Node*)) { visit = v; levelOrder(rt); }
     void output(std::ostream& out) const { output(rt, out); }
 protected:
-    BinaryTreeNode<_Ty>* rt = nullptr;  // Pointer to the root.
+    Node* rt = nullptr;  // Pointer to the root.
     sizet treeSize = 0;  // Number of elements.
 
     static void (*visit)(Node*);  // Function to be called on each node.
@@ -99,7 +91,7 @@ protected:
      * @brief Copy all the nodes in a tree.
      * @param r Root of the tree.
     */
-    BinaryTreeNode<_Ty>* copyTree(Node* r);
+    Node* copyTree(Node* r);
     /**
      * @brief Swap all the left and right children in a tree.
      * @param r Root of the tree.
@@ -145,28 +137,28 @@ protected:
 };
 
 template<class _Ty>
-void (*BinaryTreeTest<_Ty>::visit)(Node*) = nullptr;
+void (*BinaryTree<_Ty>::visit)(Node*) = nullptr;
 
 /*** public methods ***/
 
 template<class _Ty>
-BinaryTreeTest<_Ty>& BinaryTreeTest<_Ty>::operator=(const Tree& Tree) {
-    if (this != &Tree) {
-        rt = copyTree(Tree.rt);
-        treeSize = Tree.treeSize;
+auto BinaryTree<_Ty>::operator=(const Tree& tree) -> Tree& {
+    if (this != &tree) {
+        rt = copyTree(tree.rt);
+        treeSize = tree.treeSize;
     }
     return *this;
 }
 
 template<class _Ty>
-void BinaryTreeTest<_Ty>::makeTree(const _Ty& element, const Tree& left, const Tree& right) {
+void BinaryTree<_Ty>::makeTree(const _Ty& element, const Tree& left, const Tree& right) {
     clear();
     rt = new Node{ element, copyTree(left.rt), copyTree(right.rt) };
     treeSize = left.treeSize + right.treeSize + 1;
 }
 
 template<class _Ty>
-void BinaryTreeTest<_Ty>::clear() {
+void BinaryTree<_Ty>::clear() {
     postOrder(dispose);
     rt = nullptr;
     treeSize = 0;
@@ -175,13 +167,13 @@ void BinaryTreeTest<_Ty>::clear() {
 /*** protected methods ***/
 
 template<class _Ty>
-auto BinaryTreeTest<_Ty>::height(Node* r) -> sizet {
+auto BinaryTree<_Ty>::height(Node* r) -> sizet {
     if (!r) { return 0; }
     return 1 + std::max(height(r->leftChild), height(r->rightChild));
 }
 
 template<class _Ty>
-auto BinaryTreeTest<_Ty>::copyTree(Node* r) -> Node* {
+auto BinaryTree<_Ty>::copyTree(Node* r) -> Node* {
     if (!r) { return nullptr; }
     Node* lChild = copyTree(r->leftChild);
     Node* rChild = copyTree(r->rightChild);
@@ -190,7 +182,7 @@ auto BinaryTreeTest<_Ty>::copyTree(Node* r) -> Node* {
 }
 
 template<class _Ty>
-void BinaryTreeTest<_Ty>::revolute(Node* r) {
+void BinaryTree<_Ty>::revolute(Node* r) {
     if (!r) { return; }
     Node* temp = r->leftChild;
     r->leftChild = r->rightChild;
@@ -200,7 +192,7 @@ void BinaryTreeTest<_Ty>::revolute(Node* r) {
 }
 
 template<class _Ty>
-void BinaryTreeTest<_Ty>::preOrder(Node* r) {
+void BinaryTree<_Ty>::preOrder(Node* r) {
     if (!r) { return; }
     visit(r);
     preOrder(r->leftChild);
@@ -208,7 +200,7 @@ void BinaryTreeTest<_Ty>::preOrder(Node* r) {
 }
 
 template<class _Ty>
-void BinaryTreeTest<_Ty>::inOrder(Node* r) {
+void BinaryTree<_Ty>::inOrder(Node* r) {
     if (!r) { return; }
     inOrder(r->leftChild);
     visit(r);
@@ -216,7 +208,7 @@ void BinaryTreeTest<_Ty>::inOrder(Node* r) {
 }
 
 template<class _Ty>
-void BinaryTreeTest<_Ty>::inOrder(Node* r, std::vector<Node*>& nodePtrVec) {
+void BinaryTree<_Ty>::inOrder(Node* r, std::vector<Node*>& nodePtrVec) {
     if (!r) { return; }
     inOrder(r->leftChild, nodePtrVec);
     nodePtrVec.push_back(r);
@@ -224,7 +216,7 @@ void BinaryTreeTest<_Ty>::inOrder(Node* r, std::vector<Node*>& nodePtrVec) {
 }
 
 template<class _Ty>
-void BinaryTreeTest<_Ty>::postOrder(Node* r) {
+void BinaryTree<_Ty>::postOrder(Node* r) {
     if (!r) { return; }
     postOrder(r->leftChild);
     postOrder(r->rightChild);
@@ -232,7 +224,7 @@ void BinaryTreeTest<_Ty>::postOrder(Node* r) {
 }
 
 template<class _Ty>
-void BinaryTreeTest<_Ty>::levelOrder(Node* r) {
+void BinaryTree<_Ty>::levelOrder(Node* r) {
     std::queue<Node*> q;
     while (r) {
         visit(r);
@@ -245,7 +237,7 @@ void BinaryTreeTest<_Ty>::levelOrder(Node* r) {
 }
 
 template<class _Ty>
-void BinaryTreeTest<_Ty>::output(Node* r, std::ostream& out) {
+void BinaryTree<_Ty>::output(Node* r, std::ostream& out) {
     if (r == nullptr) { return; }
     // Get the width of the tree.
     std::vector<Node*> ptrs;
@@ -304,7 +296,7 @@ void BinaryTreeTest<_Ty>::output(Node* r, std::ostream& out) {
 
 // @brief Output the tree to the output stream.
 template<class _Ty>
-std::ostream& operator<<(std::ostream& out, BinaryTreeTest<_Ty>& tree) {
+std::ostream& operator<<(std::ostream& out, BinaryTree<_Ty>& tree) {
     tree.output(out);
     return out;
 }

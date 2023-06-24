@@ -16,17 +16,17 @@ namespace W4
         *               /
         *              10
         */
-        BinaryTreeTest<int> emptyTree;
-        BinaryTreeTest<int> t7;    t7.makeTree(7, emptyTree, emptyTree);
-        BinaryTreeTest<int> t8;    t8.makeTree(8, emptyTree, emptyTree);
-        BinaryTreeTest<int> t5;    t5.makeTree(5, emptyTree, emptyTree);
-        BinaryTreeTest<int> t10;   t10.makeTree(10, emptyTree, emptyTree);
-        BinaryTreeTest<int> t9;    t9.makeTree(9, t10, emptyTree);
-        BinaryTreeTest<int> t6;    t6.makeTree(6, emptyTree, t9);
-        BinaryTreeTest<int> t4;    t4.makeTree(4, t7, t8);
-        BinaryTreeTest<int> t2;    t2.makeTree(2, emptyTree, t4);
-        BinaryTreeTest<int> t3;    t3.makeTree(3, t5, t6);
-        BinaryTreeTest<int> t1;    t1.makeTree(1, t2, t3);
+        BinaryTree<int> emptyTree;
+        BinaryTree<int> t7;    t7.makeTree(7, emptyTree, emptyTree);
+        BinaryTree<int> t8;    t8.makeTree(8, emptyTree, emptyTree);
+        BinaryTree<int> t5;    t5.makeTree(5, emptyTree, emptyTree);
+        BinaryTree<int> t10;   t10.makeTree(10, emptyTree, emptyTree);
+        BinaryTree<int> t9;    t9.makeTree(9, t10, emptyTree);
+        BinaryTree<int> t6;    t6.makeTree(6, emptyTree, t9);
+        BinaryTree<int> t4;    t4.makeTree(4, t7, t8);
+        BinaryTree<int> t2;    t2.makeTree(2, emptyTree, t4);
+        BinaryTree<int> t3;    t3.makeTree(3, t5, t6);
+        BinaryTree<int> t1;    t1.makeTree(1, t2, t3);
         if (out) {
             (*out) << "³õÊ¼Ê÷£º\n"
                 << t1;

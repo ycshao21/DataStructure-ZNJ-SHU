@@ -10,7 +10,7 @@ namespace Menu
     void BinaryTreeTest();
     void AdjMatWDirGraphTest();
     void AdjListWUndirGraphTest();
-    ////void Search();
+    void Search();
     ////void Sort();
 }
 
@@ -41,8 +41,8 @@ int main() {
         case '3': { Menu::LiteratureAssistant();     break; }
         case '4': { Menu::BinaryTreeTest();          break; }
         case '5': { Menu::AdjMatWDirGraphTest();     break; }
-        case '6': { Menu::AdjListWUndirGraphTest(); break; }  // Unfinished
-        case '7': { break; }  // Unfinished
+        case '6': { Menu::AdjListWUndirGraphTest();  break; }
+        case '7': { Menu::Search();                  break; }  // Unfinished
         case '8': { break; }  // Unfinished
         case '9': { flag = false; break; }
         }

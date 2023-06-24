@@ -37,12 +37,25 @@ private:
     std::string message;
 };
 
+/* Tree */
+
+class EmptyTree
+{
+public:
+    EmptyTree(std::string theMessage = "Empty tree.") {
+        message = theMessage;
+    }
+    void outputMessage() { std::cout << message << std::endl; }
+private:
+    std::string message;
+};
+
 /* Graph */
 
 class NoVertex
 {
 public:
-    NoVertex(std::string theMessage = "Empty graph.") {
+    NoVertex(std::string theMessage = "No vertex.") {
         message = theMessage;
     }
     void outputMessage() { std::cout << message << std::endl; }
