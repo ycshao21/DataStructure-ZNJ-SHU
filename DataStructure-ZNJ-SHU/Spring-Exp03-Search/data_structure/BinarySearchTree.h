@@ -50,7 +50,9 @@ public:
 
     /* Traversal */
 
+    void preOrder(void (*v)(Node*)) { visit = v; preOrder(rt); }
     void inOrder(void (*v)(Node*)) { visit = v; inOrder(rt); }
+    void postOrder(void (*v)(Node*)) { visit = v; postOrder(rt); }
 
     /* Others */
 
@@ -63,6 +65,7 @@ private:
 
     Node* copyTree(Node* r);
     static sizet height(Node* r);
+    static void preOrder(Node* r);
     static void inOrder(Node* r);
     static void inOrder(Node* r, std::vector<Node*>& nodePtrVec);  // For outputTree function.
     static void postOrder(Node* r);
@@ -72,7 +75,7 @@ private:
 };
 
 template<class K, class E>
-static void (*BinarySearchTree<K, E>::visit)(Node*) = nullptr;
+void (*BinarySearchTree<K, E>::visit)(Node*) = nullptr;
 
 template<class K, class E>
 auto BinarySearchTree<K, E>::height(Node* r) -> sizet {
@@ -139,7 +142,9 @@ void BinarySearchTree<K, E>::insert(const K& key, const E& element) {
     }
     // Create a new node.
     cur = new Node{ Pair{key, element} };
-    if (rt != nullptr) {
+    if (rt == nullptr) {
+        rt = cur;
+    } else {
         if (key < parent->data.first) {
             parent->leftChild = cur;
         } else {
@@ -149,333 +154,210 @@ void BinarySearchTree<K, E>::insert(const K& key, const E& element) {
     treeSize++;
 }
 
-//template<class K, class E>
-//bool BinarySearchTree<K, E>::EraseR_lr(const K& key) {
-//    if (rt == nullptr) {
-//        throw(MyException("Erase empty tree!"));
-//    }
-//    return _EraseR_lr(rt, key);
-//}
-//
-//template<class K, class E>
-//bool BinarySearchTree<K, E>::EraseR_ll(const K& key) {
-//    if (rt == nullptr) {
-//        throw(MyException("Erase empty tree!"));
-//    }
-//    return _EraseR_ll(rt, key);
-//}
+template<class K, class E>
+void BinarySearchTree<K, E>::erase_ver1(const K& key) {
+    Node* del = rt;
+    Node* delParent = nullptr;
+    // Find the node to delete.
+    while (del != nullptr && del->data.first != key) {
+        delParent = del;
+        if (key < del->data.first) {
+            del = del->leftChild;
+        } else {
+            del = del->rightChild;
+        }
+    }
+    // The key is not in the tree.
+    if (del == nullptr) { return; }
+    // If del has no left child, replace it with its right child.
+    if (del->leftChild == nullptr) {
+        if (del == rt) {
+            rt = del->rightChild;
+        } else {
+            if (delParent->leftChild == del) {
+                delParent->leftChild = del->rightChild;
+            } else {
+                delParent->rightChild = del->rightChild;
+            }
+        }
+        delete del;
+    } else {  // Otherwise, replace it with the maximum node in its left subtree.
+        Node* maxNode = del->leftChild;
+        Node* maxParent = del;
+        // Find the maximum node in the left subtree.
+        while (maxNode->rightChild != nullptr) {
+            maxParent = maxNode;
+            maxNode = maxNode->rightChild;
+        }
+        del->data = std::move(maxNode->data);
+        if (maxParent->leftChild == maxNode) {  // maxParent == del
+            maxParent->leftChild = maxNode->leftChild;
+        } else {
+            maxParent->rightChild = maxNode->leftChild;
+        }
+        delete maxNode;
+    }
+}
 
-//template<class K, class E>
-//bool BinarySearchTree<K, E>::Erase_lr(const K& key) {
-//    if (rt == nullptr) throw(MyException("Erase empty tree!"));
-//    Node* cur = rt;
-//    Node* parent = nullptr;
-//    while (cur) {
-//        if (cur->_key > key) {
-//            parent = cur;
-//            cur = cur->leftChild;
-//        } else if (cur->_key < key) {
-//            parent = cur;
-//            cur = cur->rightChild;
-//        } else {
-//            if (cur->leftChild == nullptr)
-//            {
-//                if (cur == rt) {
-//                    rt = cur->rightChild;
-//                } else {
-//                    if (parent->leftChild == cur) {
-//                        parent->leftChild = cur->rightChild;
-//                    } else {
-//                        parent->rightChild = cur->rightChild;
-//                    }
-//                }
-//                delete cur;
-//            } else if (cur->rightChild == nullptr)
-//            {
-//                if (cur == rt) {
-//                    rt = cur->leftChild;
-//                } else {
-//                    if (parent->leftChild == cur) {
-//                        parent->leftChild = cur->leftChild;
-//                    } else {
-//                        parent->rightChild = cur->leftChild;
-//                    }
-//                }
-//                delete cur;
-//            } else {
-//                Node* child = cur->leftChild;
-//                parent = cur;
-//                while (child->rightChild)//寻找左子树的最大节点
-//                {
-//                    parent = child;
-//                    child = child->rightChild;
-//                }
-//                cur->_key = child->_key;
-//                cur->_value = child->_value;
-//                //删除child
-//                if (parent->leftChild == child) {
-//                    parent->leftChild = child->leftChild;
-//                } else {
-//                    parent->rightChild = child->leftChild;
-//                }
-//                delete child;
-//            }
-//            return true;
-//        }
-//    }
-//    return false;
-//}
-//
-//template<class K, class E>
-//bool BinarySearchTree<K, E>::Erase_rl(const K& key) {
-//    if (rt == nullptr) throw(MyException("Erase empty tree!"));
-//    Node* cur = rt;
-//    Node* parent = nullptr;
-//    while (cur) {
-//        if (cur->_key > key) {
-//            parent = cur;
-//            cur = cur->leftChild;
-//        } else if (cur->_key < key) {
-//            parent = cur;
-//            cur = cur->rightChild;
-//        } else {
-//            if (cur->leftChild == nullptr)
-//            {
-//                if (cur == rt) {
-//                    rt = cur->rightChild;
-//                } else {
-//                    if (parent->leftChild == cur) {
-//                        parent->leftChild = cur->rightChild;
-//                    } else {
-//                        parent->rightChild = cur->rightChild;
-//                    }
-//                }
-//                delete cur;
-//            } else if (cur->rightChild == nullptr)
-//            {
-//                if (cur == rt) {
-//                    rt = cur->leftChild;
-//                } else {
-//                    if (parent->leftChild == cur) {
-//                        parent->leftChild = cur->leftChild;
-//                    } else {
-//                        parent->rightChild = cur->leftChild;
-//                    }
-//                }
-//                delete cur;
-//            } else
-//            {
-//                Node* child = cur->rightChild;
-//                parent = cur;
-//                while (child->leftChild)
-//                {
-//                    parent = child;
-//                    child = child->leftChild;
-//                }
-//                cur->_key = child->_key;
-//                cur->_value = child->_value;
-//                //删除child
-//                if (parent->leftChild == child) {
-//                    parent->leftChild = child->leftChild;
-//                } else {
-//                    parent->rightChild = child->leftChild;
-//                }
-//                delete child;
-//            }
-//            return true;
-//        }
-//    }
-//    return false;
-//}
-//
-//template<class K, class E>
-//bool BinarySearchTree<K, E>::Erase_ll(const K& key) {
-//    if (rt == nullptr) throw(MyException("Erase empty tree!"));
-//    Node* cur = rt;
-//    Node* parent = nullptr;
-//    while (cur) {
-//        if (cur->_key > key) {
-//            parent = cur;
-//            cur = cur->leftChild;
-//        } else if (cur->_key < key) {
-//            parent = cur;
-//            cur = cur->rightChild;
-//        } else {
-//            if (cur->leftChild == nullptr)
-//            {
-//                if (cur == rt) {
-//                    rt = cur->rightChild;
-//                } else {
-//                    if (parent->leftChild == cur) {
-//                        parent->leftChild = cur->rightChild;
-//                    } else {
-//                        parent->rightChild = cur->rightChild;
-//                    }
-//                }
-//                delete cur;
-//            } else if (cur->rightChild == nullptr)
-//            {
-//                if (cur == rt) {
-//                    rt = cur->leftChild;
-//                } else {
-//                    if (parent->leftChild == cur) {
-//                        parent->leftChild = cur->leftChild;
-//                    } else {
-//                        parent->rightChild = cur->leftChild;
-//                    }
-//                }
-//                delete cur;
-//            } else
-//            {
-//                Node* child = cur->rightChild;
-//                while (child->leftChild)
-//                {
-//                    child = child->leftChild;
-//                }
-//                child->leftChild = cur->leftChild;
-//                if (cur == rt) {
-//                    rt = cur->rightChild;
-//                } else if (parent->leftChild == cur) {
-//                    parent->leftChild = cur->rightChild;
-//                } else {
-//                    parent->rightChild = cur->rightChild;
-//                }
-//                delete cur;
-//            }
-//            return true;
-//        }
-//    }
-//    return false;
-//}
-//
-//template<class K, class E>
-//bool BinarySearchTree<K, E>::Erase_rr(const K& key) {
-//    if (rt == nullptr) throw(MyException("Erase empty tree!"));
-//    Node* cur = rt;
-//    Node* parent = nullptr;
-//    while (cur) {
-//        if (cur->_key > key) {
-//            parent = cur;
-//            cur = cur->leftChild;
-//        } else if (cur->_key < key) {
-//            parent = cur;
-//            cur = cur->rightChild;
-//        } else {
-//            if (cur->leftChild == nullptr)
-//            {
-//                if (cur == rt) {
-//                    rt = cur->rightChild;
-//                } else {
-//                    if (parent->leftChild == cur) {
-//                        parent->leftChild = cur->rightChild;
-//                    } else {
-//                        parent->rightChild = cur->rightChild;
-//                    }
-//                }
-//                delete cur;
-//            } else if (cur->rightChild == nullptr)
-//            {
-//                if (cur == rt) {
-//                    rt = cur->leftChild;
-//                } else {
-//                    if (parent->leftChild == cur) {
-//                        parent->leftChild = cur->leftChild;
-//                    } else {
-//                        parent->rightChild = cur->leftChild;
-//                    }
-//                }
-//                delete cur;
-//            } else
-//            {
-//                Node* child = cur->leftChild;
-//                while (child->rightChild)//寻找左子树的最大节点
-//                {
-//                    child = child->rightChild;
-//                }
-//                child->rightChild = cur->rightChild;
-//                if (cur == rt) {
-//                    rt = cur->leftChild;
-//                } else if (parent->leftChild == cur) {
-//                    parent->leftChild = cur->leftChild;
-//                } else {
-//                    parent->rightChild = cur->leftChild;
-//                }
-//                delete cur;
-//            }
-//            return true;
-//        }
-//    }
-//    return false;
-//}
+template<class K, class E>
+void BinarySearchTree<K, E>::erase_ver2(const K& key) {
+    Node* del = rt;
+    Node* delParent = nullptr;
+    // Find the node to delete.
+    while (del != nullptr && del->data.first != key) {
+        delParent = del;
+        if (key < del->data.first) {
+            del = del->leftChild;
+        } else {
+            del = del->rightChild;
+        }
+    }
+    // The key is not in the tree.
+    if (del == nullptr) { return; }
+    // If del has no right child, replace it with its left child.
+    if (del->rightChild == nullptr) {
+        if (del == rt) {
+            rt = del->leftChild;
+        } else {
+            if (delParent->leftChild == del) {
+                delParent->leftChild = del->leftChild;
+            } else {
+                delParent->rightChild = del->leftChild;
+            }
+        }
+        delete del;
+    } else {  // Otherwise, replace it with the minimum node in its right subtree.
+        Node* minNode = del->rightChild;
+        Node* minParent = del;
+        // Find the minimum node in the right subtree.
+        while (minNode->leftChild != nullptr) {
+            minParent = minNode;
+            minNode = minNode->leftChild;
+        }
+        del->data = std::move(minNode->data);
+        if (minParent->rightChild == minNode) {  // minParent == del
+            minParent->rightChild = minNode->rightChild;
+        } else {
+            minParent->leftChild = minNode->rightChild;
+        }
+        delete minNode;
+    }
+}
 
-//
-//template<class K, class E>
-//bool BinarySearchTree<K, E>::_EraseR_lr(Node*& rt, const K& key) {
-//    if (rt == nullptr) return false;
-//    if (rt->_key < key) {
-//        _EraseR(rt->rightChild, key);
-//    } else if (rt->_key > key) {
-//        _EraseR(rt->leftChild, key);
-//    } else {
-//        if (rt->leftChild == nullptr) {
-//            Node* del = rt;
-//            rt = rt->rightChild;
-//            delete del;
-//        } else if (rt->rightChild == nullptr) {
-//            Node* del = rt;
-//            rt = rt->leftChild;
-//            delete del;
-//        } else {
-//            Node* child = rt->leftChild;
-//            while (child->rightChild) {
-//                child = child->rightChild;
-//            }
-//            K keymax = child->_key;
-//            E valuemax = child->_value;
-//            _EraseR(rt->leftChild, keymax);
-//            rt->_key = keymax;
-//            rt->_value = valuemax;
-//        }
-//        return true;
-//    }
-//}
-//
-//template<class K, class E>
-//bool BinarySearchTree<K, E>::_EraseR_ll(Node*& rt, const K& key) {
-//    if (rt == nullptr) return false;
-//    if (rt->_key < key) {
-//        _EraseR1(rt->rightChild, key);
-//    } else if (rt->_key > key) {
-//        _EraseR1(rt->leftChild, key);
-//    } else {
-//        if (rt->leftChild == nullptr) {
-//            Node* del = rt;
-//            rt = rt->rightChild;
-//            delete del;
-//        } else if (rt->rightChild == nullptr) {
-//            Node* del = rt;
-//            rt = rt->leftChild;
-//            delete del;
-//        } else {
-//            Node* child = rt->rightChild;
-//            while (child->leftChild) {
-//                child = child->leftChild;
-//            }
-//            child->leftChild = rt->leftChild;
-//            Node* del = rt;
-//            rt = rt->rightChild;
-//            delete del;
-//        }
-//        return true;
-//    }
-//}
+template<class K, class E>
+void BinarySearchTree<K, E>::erase_ver3(const K& key) {
+    Node* del = rt;
+    Node* delParent = nullptr;
+    // Find the node to delete.
+    while (del != nullptr && del->data.first != key) {
+        delParent = del;
+        if (key < del->data.first) {
+            del = del->leftChild;
+        } else {
+            del = del->rightChild;
+        }
+    }
+    // The key is not in the tree.
+    if (del == nullptr) { return; }
+    // If del has no right child, replace it with its left child.
+    if (del->rightChild == nullptr) {
+        if (del == rt) {
+            rt = del->leftChild;
+        } else {
+            if (delParent->leftChild == del) {
+                delParent->leftChild = del->leftChild;
+            } else {
+                delParent->rightChild = del->leftChild;
+            }
+        }
+        delete del;
+        return;
+    }
+    // If del has left subtree, move it to the left subtree of the minimum node in del's right subtree.
+    if (del->leftChild != nullptr) {
+        Node* minNode = del->rightChild;
+        // Find the minimum node in the right subtree.
+        while (minNode->leftChild != nullptr) {
+            minNode = minNode->leftChild;
+        }
+        minNode->leftChild = del->leftChild;
+    }
+    if (del == rt) {
+        rt = del->rightChild;
+    } else {
+        if (delParent->leftChild == del) {
+            delParent->leftChild = del->rightChild;
+        } else {
+            delParent->rightChild = del->rightChild;
+        }
+    }
+    delete del;
+}
+
+template<class K, class E>
+void BinarySearchTree<K, E>::erase_ver4(const K& key) {
+    Node* del = rt;
+    Node* delParent = nullptr;
+    // Find the node to delete.
+    while (del != nullptr && del->data.first != key) {
+        delParent = del;
+        if (key < del->data.first) {
+            del = del->leftChild;
+        } else {
+            del = del->rightChild;
+        }
+    }
+    // The key is not in the tree.
+    if (del == nullptr) { return; }
+    // If del has no left child, replace it with its right child.
+    if (del->leftChild == nullptr) {
+        if (del == rt) {
+            rt = del->rightChild;
+        } else {
+            if (delParent->leftChild == del) {
+                delParent->leftChild = del->rightChild;
+            } else {
+                delParent->rightChild = del->rightChild;
+            }
+        }
+        delete del;
+        return;
+    }
+    // If del has right subtree, move it to the right subtree of the maximum node in del's left subtree.
+    if (del->rightChild != nullptr) {
+        Node* maxNode = del->leftChild;
+        // Find the minimum node in the right subtree.
+        while (maxNode->rightChild != nullptr) {
+            maxNode = maxNode->rightChild;
+        }
+        maxNode->rightChild = del->rightChild;
+    }
+    if (del == rt) {
+        rt = del->leftChild;
+    } else {
+        if (delParent->leftChild == del) {
+            delParent->leftChild = del->leftChild;
+        } else {
+            delParent->rightChild = del->leftChild;
+        }
+    }
+    delete del;
+}
+
+template<class K, class E>
+void BinarySearchTree<K, E>::preOrder(Node* r) {
+    if (r == nullptr) { return; }
+    preOrder(r->leftChild);
+    visit(r);
+    preOrder(r->rightChild);
+}
 
 template<class K, class E>
 void BinarySearchTree<K, E>::inOrder(Node* r) {
     if (r == nullptr) { return; }
-    inOrder(r->leftChild, v);
+    inOrder(r->leftChild);
     visit(r);
-    inOrder(r->rightChild, v);
+    inOrder(r->rightChild);
 }
 
 template<class K, class E>
@@ -489,8 +371,8 @@ void BinarySearchTree<K, E>::inOrder(Node* r, std::vector<Node*>& nodePtrVec) {
 template<class K, class E>
 void BinarySearchTree<K, E>::postOrder(Node* r) {
     if (r == nullptr) { return; }
-    inOrder(r->leftChild, v);
-    inOrder(r->rightChild, v);
+    inOrder(r->leftChild);
+    inOrder(r->rightChild);
     visit(r);
 }
 
@@ -502,9 +384,9 @@ void BinarySearchTree<K, E>::outputTree(Node* r, std::ostream& out) {
     inOrder(r, ptrs);
     std::ostringstream ss;  // For type conversion.
     std::unordered_map<Node*, indext> pos; // Position of each node.
-    for (auto& p : ptrs) {
+    for (const auto& p : ptrs) {
         pos[p] = ss.str().size();
-        ss << p->element << " ";
+        ss << p->data.first << ": " << p->data.second << " ";
     }
     sizet width = ss.str().size();
     ss.str("");
@@ -530,7 +412,7 @@ void BinarySearchTree<K, E>::outputTree(Node* r, std::ostream& out) {
                 }
             }
             // Print the element on the first line.
-            ss << curNodePtr->element;
+            ss << curNodePtr->data.first << ": " << curNodePtr->data.second;
             std::string elemStr = ss.str();
             ss.str("");
             for (indext j = 0; j < elemStr.size(); ++j, ++elemPos) {

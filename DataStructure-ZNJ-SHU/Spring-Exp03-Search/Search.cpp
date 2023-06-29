@@ -140,6 +140,7 @@ namespace Menu
             {
                 system("cls");
                 ShowCursor();
+                S3::BinarySearchTreeTest();
                 HideCursor();
 
                 system("pause");
