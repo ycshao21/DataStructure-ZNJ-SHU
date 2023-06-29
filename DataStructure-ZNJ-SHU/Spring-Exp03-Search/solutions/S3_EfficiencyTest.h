@@ -15,7 +15,7 @@ namespace S3
         std::ranges::sort(vec1);
 
         std::cout << "正在生成第二个数组……" << std::endl;
-        std::vector<Ty> vec2 = Rand_Normal<Ty>().generateVec(n, 5000, n);
+        std::vector<Ty> vec2 = Rand_Normal<Ty>().generateVec(n, 5000, Ty(n));
         std::ranges::sort(vec2);
 
         double med;
