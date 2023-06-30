@@ -57,7 +57,7 @@ public:
     /* Others */
 
     void outputElements(std::ostream& out = std::cout) const { inOrder(print); }
-    void outputTree(std::ostream& out = std::cout) const { outputTree(rt, out); }
+    void outputKeyTree(std::ostream& out = std::cout) const { outputKeyTree(rt, out); }
 private:
     Node* rt;
     sizet treeSize;
@@ -69,7 +69,7 @@ private:
     static void inOrder(Node* r);
     static void inOrder(Node* r, std::vector<Node*>& nodePtrVec);  // For outputTree function.
     static void postOrder(Node* r);
-    static void outputTree(Node* r, std::ostream& out = std::cout);
+    static void outputKeyTree(Node* r, std::ostream& out = std::cout);
     static void print(Node* r) { std::cout << r->data.second << " "; }
     static void dispose(Node* node) { delete node; }
 };
@@ -88,7 +88,7 @@ auto BinarySearchTree<K, E>::copyTree(Node* r) -> Node* {
     if (r == nullptr) { return nullptr; }
     Node* lChild = copyTree(r->leftChild);
     Node* rChild = copyTree(r->rightChild);
-    Node* root = new Node{ r->element, lChild, rChild };
+    Node* root = new Node{ r->data, lChild, rChild };
     return root;
 }
 
@@ -197,6 +197,7 @@ void BinarySearchTree<K, E>::erase_ver1(const K& key) {
         }
         delete maxNode;
     }
+    treeSize--;
 }
 
 template<class K, class E>
@@ -242,6 +243,7 @@ void BinarySearchTree<K, E>::erase_ver2(const K& key) {
         }
         delete minNode;
     }
+    treeSize--;
 }
 
 template<class K, class E>
@@ -271,6 +273,7 @@ void BinarySearchTree<K, E>::erase_ver3(const K& key) {
             }
         }
         delete del;
+        treeSize--;
         return;
     }
     // If del has left subtree, move it to the left subtree of the minimum node in del's right subtree.
@@ -292,6 +295,7 @@ void BinarySearchTree<K, E>::erase_ver3(const K& key) {
         }
     }
     delete del;
+    treeSize--;
 }
 
 template<class K, class E>
@@ -321,6 +325,7 @@ void BinarySearchTree<K, E>::erase_ver4(const K& key) {
             }
         }
         delete del;
+        treeSize--;
         return;
     }
     // If del has right subtree, move it to the right subtree of the maximum node in del's left subtree.
@@ -342,6 +347,7 @@ void BinarySearchTree<K, E>::erase_ver4(const K& key) {
         }
     }
     delete del;
+    treeSize--;
 }
 
 template<class K, class E>
@@ -371,13 +377,13 @@ void BinarySearchTree<K, E>::inOrder(Node* r, std::vector<Node*>& nodePtrVec) {
 template<class K, class E>
 void BinarySearchTree<K, E>::postOrder(Node* r) {
     if (r == nullptr) { return; }
-    inOrder(r->leftChild);
-    inOrder(r->rightChild);
+    postOrder(r->leftChild);
+    postOrder(r->rightChild);
     visit(r);
 }
 
 template<class K, class E>
-void BinarySearchTree<K, E>::outputTree(Node* r, std::ostream& out) {
+void BinarySearchTree<K, E>::outputKeyTree(Node* r, std::ostream& out) {
     if (r == nullptr) { return; }
     // Get the width of the tree.
     std::vector<Node*> ptrs;
@@ -386,7 +392,7 @@ void BinarySearchTree<K, E>::outputTree(Node* r, std::ostream& out) {
     std::unordered_map<Node*, indext> pos; // Position of each node.
     for (const auto& p : ptrs) {
         pos[p] = ss.str().size();
-        ss << p->data.first << ": " << p->data.second << " ";
+        ss << p->data.first << " ";
     }
     sizet width = ss.str().size();
     ss.str("");
@@ -412,7 +418,7 @@ void BinarySearchTree<K, E>::outputTree(Node* r, std::ostream& out) {
                 }
             }
             // Print the element on the first line.
-            ss << curNodePtr->data.first << ": " << curNodePtr->data.second;
+            ss << curNodePtr->data.first;
             std::string elemStr = ss.str();
             ss.str("");
             for (indext j = 0; j < elemStr.size(); ++j, ++elemPos) {

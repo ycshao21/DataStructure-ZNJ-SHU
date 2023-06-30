@@ -81,9 +81,6 @@
     <ClInclude Include="Spring-Exp03-Search\solutions\S3_Solutions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Spring-Exp03-Search\solutions\S3_EfficiencyTest.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Spring-Exp03-Search\data_structure\BinarySearchTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -135,6 +132,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Spring-Exp03-Search\Search.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Spring-Exp03-Search\solutions\S3_Solutions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

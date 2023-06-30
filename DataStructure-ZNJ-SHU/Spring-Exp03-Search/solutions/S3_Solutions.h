@@ -1,7 +1,6 @@
 #pragma once
 #include<iostream>
 #include<vector>
-//#include<unordered_set>
 
 namespace S3
 {
@@ -123,84 +122,6 @@ namespace S3
         return med;
     }
 
-    //void test_rand_runtime()
-    //{
-    //    const int N = 100000;
-    //    std::unordered_set<int> a;
-    //    int i = 0;
-    //    while (a.size() < N) {
-    //        a.insert((rand() + i) % INT_MAX);
-    //        i = (i + 1) % N;
-    //    }
-    //    std::vector<int> b;		//直接遍历a进行删除，因为unordered_set每次遍历不一致，会导致删除的顺序不一致
-    //    for (auto& e : a) b.push_back(e);
-    //    std::cout << a.size() << std::endl;
-    //    clock_t t = clock();
-    //    BSTree<int, int> tree;
-    //    BSTree<int, int> tree1;
-    //    for (auto& e : b) tree.Insert(e, e);
-    //    for (auto& e : b) tree1.Insert(e, e);
-    //    //BSTree<int, int> tree1(tree);
-    //    t = clock() - t;
-    //    std::cout << "Rand insert time: " << (double)t / CLOCKS_PER_SEC << std::endl;
-    //    clock_t t1 = clock();
-    //    for (auto& e : b) {
-    //        tree.Erase_lr(e);
-    //    }
-    //    t1 = clock() - t1;
-    //    //std::cout << "Erase time1: " << (double)t1 / CLOCKS_PER_SEC << std::endl;
-    //    clock_t t2 = clock();
-    //    for (auto& e : b) {
-    //        tree1.Erase_ll(e);
-    //    }
-    //    t2 = clock() - t2;
-    //    std::cout << "Rand erase time1: " << (double)t1 / CLOCKS_PER_SEC << " ,Rand erase time2: " << (double)t2 / CLOCKS_PER_SEC << std::endl;
-    //}
-
-    //void test_sort_runtime()
-    //{
-    //    const int N = 100000;
-    //    std::vector<int> b;
-    //    for (int i = 0; i < N; i++) b.push_back(i);
-    //    clock_t t = clock();
-    //    BSTree<int, int> tree;
-    //    BSTree<int, int> tree1;
-    //    for (auto& e : b) tree.Insert(e, e);
-    //    for (auto& e : b) tree1.Insert(e, e);
-    //    //BSTree<int, int> tree1(tree);
-    //    t = clock() - t;
-    //    std::cout << "Sort insert time: " << (double)t / CLOCKS_PER_SEC << std::endl;
-    //    clock_t t1 = clock();
-    //    for (auto& e : b) {
-    //        tree.Erase_lr(e);
-    //    }
-    //    t1 = clock() - t1;
-    //    //std::cout << "Erase time1: " << (double)t1 / CLOCKS_PER_SEC << std::endl;
-    //    clock_t t2 = clock();
-    //    for (auto& e : b) {
-    //        tree1.Erase_ll(e);
-    //    }
-    //    t2 = clock() - t2;
-    //    std::cout << "Sort erase time1: " << (double)t1 / CLOCKS_PER_SEC << " ,Sort erase time2: " << (double)t2 / CLOCKS_PER_SEC << std::endl;
-    //}
-
-    //void Question03() {
-    //    BSTree<int, int> tree;
-    //    int a[] = { 5,3,4,1,7,8,2,6,0,9 };
-    //    for (auto e : a) {
-    //        tree.InsertR(e, e);
-    //    }
-    //    BSTree<int, int> tree1(tree);
-    //    tree.printTree();
-    //    tree1.printTree();
-    //    for (auto e : a) {
-    //        tree.Erase_ll(e);
-    //        tree1.Erase_lr(e);
-    //        tree.printTree();
-    //        tree1.printTree();
-    //    }
-
-    //    test_rand_runtime();
-    //    test_sort_runtime();
-    //}
+    void BST_Test();
+    void BST_EfficiencyTest();
 }
