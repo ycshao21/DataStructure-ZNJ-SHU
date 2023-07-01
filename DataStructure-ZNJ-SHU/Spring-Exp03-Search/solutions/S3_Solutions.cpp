@@ -27,7 +27,7 @@ namespace S3
             bool validInput;
             while ((choice = _getch()) < '1' && choice > '7');
 
-            auto GetInput = [&]()->int {
+            auto GetKey = [&]()->int {
                 int key;
                 while (true) {
                     std::cin >> key;
@@ -45,7 +45,7 @@ namespace S3
                 ShowCursor();
                 std::cout << "插入元素\n";
                 std::cout << "请输入待插入元素的键（整数）：";
-                int key = GetInput();
+                int key = GetKey();
                 HideCursor();
                 tree.insert(key, key);
                 break;
@@ -55,7 +55,7 @@ namespace S3
                 ShowCursor();
                 std::cout << "删除元素（用左子树最大元素替换待删除元素）\n";
                 std::cout << "请输入待删除元素的键：";
-                int key = GetInput();
+                int key = GetKey();
                 HideCursor();
                 tree.erase_ver1(key);
                 break;
@@ -65,7 +65,7 @@ namespace S3
                 ShowCursor();
                 std::cout << "删除元素（用右子树最小元素替换待删除元素）\n";
                 std::cout << "请输入待删除元素的键：";
-                int key = GetInput();
+                int key = GetKey();
                 HideCursor();
                 tree.erase_ver2(key);
                 break;
@@ -75,7 +75,7 @@ namespace S3
                 ShowCursor();
                 std::cout << "删除元素（将左子树移动到右子树最小元素的左子树）\n";
                 std::cout << "请输入待删除元素的键：";
-                int key = GetInput();
+                int key = GetKey();
                 HideCursor();
                 tree.erase_ver3(key);
                 break;
@@ -85,7 +85,7 @@ namespace S3
                 ShowCursor();
                 std::cout << "删除元素（将右子树移动到左子树最大元素的右子树）\n";
                 std::cout << "请输入待删除元素的键：";
-                int key = GetInput();
+                int key = GetKey();
                 HideCursor();
                 tree.erase_ver4(key);
                 break;
@@ -138,7 +138,7 @@ namespace S3
             BinarySearchTree<int, int> copy(tree);
             clock_t start = clock();
             for (const auto& element : elements) {
-                (copy.*methods[idx - 1])(element.first);
+                (copy.*methods[idx - 1])(element.first);  // Call erase function.
             }
             clock_t end = clock();
             std::cout << "用时" << end - start << "ms" << std::endl;
