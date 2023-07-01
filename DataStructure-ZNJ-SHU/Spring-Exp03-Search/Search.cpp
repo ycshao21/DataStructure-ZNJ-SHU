@@ -178,6 +178,7 @@ namespace Menu
                     S3::BST_Test();
                 } else {
                     S3::BST_EfficiencyTest();
+                    system("pause");
                 }
                 break;
             }

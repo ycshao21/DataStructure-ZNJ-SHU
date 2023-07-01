@@ -42,7 +42,7 @@ int main() {
         case '4': { Menu::BinaryTreeTest();          break; }
         case '5': { Menu::AdjMatWDirGraphTest();     break; }
         case '6': { Menu::AdjListWUndirGraphTest();  break; }
-        case '7': { Menu::Search();                  break; }  // Unfinished
+        case '7': { Menu::Search();                  break; }
         case '8': { break; }  // Unfinished
         case '9': { flag = false; break; }
         }

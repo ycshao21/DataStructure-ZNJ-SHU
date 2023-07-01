@@ -151,7 +151,5 @@ namespace S3
         EraseTest(3);
         std::cout << "方法四：将右子树移动到左子树最大元素的右子树" << std::endl;
         EraseTest(4);
-
-        system("pause");
     }
 }
