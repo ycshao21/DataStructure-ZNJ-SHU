@@ -11,7 +11,7 @@ namespace Menu
     void AdjMatWDirGraphTest();
     void AdjListWUndirGraphTest();
     void Search();
-    ////void Sort();
+    void Sort();
 }
 
 int main() {
@@ -43,8 +43,9 @@ int main() {
         case '5': { Menu::AdjMatWDirGraphTest();     break; }
         case '6': { Menu::AdjListWUndirGraphTest();  break; }
         case '7': { Menu::Search();                  break; }
-        case '8': { break; }  // Unfinished
-        case '9': { flag = false; break; }
+        case '8': { Menu::Sort();                    break; }
+        case '9': { flag = false;                    break; }
         }
     }
+    return 0;
 }

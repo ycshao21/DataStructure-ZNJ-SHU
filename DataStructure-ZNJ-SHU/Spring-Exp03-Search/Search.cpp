@@ -44,9 +44,9 @@ namespace Menu
                 std::vector<int> a(aSize), b(bSize), c(cSize);
                 std::cout << "请输入第一个数组的元素：" << std::endl;
                 while (true) {
-                    for (auto& e : a) {
-                        std::cin >> e;
-                        validInput = !std::cin.fail();
+                    for (int i = 0; i < aSize; i++) {
+                        std::cin >> a[i];
+                        validInput = !std::cin.fail() && (i == 0 || a[i - 1] <= a[i]);
                         if (!validInput) { break; }
                     }
                     ClearBuffer();
@@ -56,9 +56,9 @@ namespace Menu
 
                 std::cout << "请输入第二个数组的元素：" << std::endl;
                 while (true) {
-                    for (auto& e : b) {
-                        std::cin >> e;
-                        validInput = !std::cin.fail();
+                    for (int i = 0; i < bSize; i++) {
+                        std::cin >> b[i];
+                        validInput = !std::cin.fail() && (i == 0 || b[i - 1] <= b[i]);
                         if (!validInput) { break; }
                     }
                     ClearBuffer();
@@ -68,9 +68,9 @@ namespace Menu
 
                 std::cout << "请输入第三个数组的元素：" << std::endl;
                 while (true) {
-                    for (auto& e : c) {
-                        std::cin >> e;
-                        validInput = !std::cin.fail();
+                    for (int i = 0; i < cSize; i++) {
+                        std::cin >> c[i];
+                        validInput = !std::cin.fail() && (i == 0 || c[i - 1] <= c[i]);
                         if (!validInput) { break; }
                     }
                     ClearBuffer();
@@ -102,7 +102,7 @@ namespace Menu
                     std::cout << "输入有误！请重新输入两个数组的长度（2个数）: ";
                 }
                 HideCursor();
-                std::vector<int> vec1, vec2;
+                std::vector<int> vec1(m), vec2(n);
 
                 std::cout << "[1] 用例测试" << "\n";
                 std::cout << "[2] 效率对比" << "\n" << std::endl;
@@ -110,14 +110,12 @@ namespace Menu
 
                 if (key == '1') {
                     ShowCursor();
-                    int temp;
                     std::cout << "请输入第一个数组的元素:" << std::endl;
                     while (true) {
                         for (int i = 0; i < m; i++) {
-                            std::cin >> temp;
-                            validInput = !std::cin.fail() && (i == 0 || vec1[i - 1] <= temp);
+                            std::cin >> vec1[i];
+                            validInput = !std::cin.fail() && (i == 0 || vec1[i - 1] <= vec1[i]);
                             if (!validInput) { break; }
-                            vec1.push_back(temp);
                         }
                         ClearBuffer();
                         if (validInput) { break; }
@@ -126,10 +124,9 @@ namespace Menu
                     std::cout << "请输入第二个数组的元素: " << std::endl;
                     while (true) {
                         for (int i = 0; i < n; i++) {
-                            std::cin >> temp;
-                            validInput = !std::cin.fail() && (i == 0 || vec2[i - 1] <= temp);
+                            std::cin >> vec2[i];
+                            validInput = !std::cin.fail() && (i == 0 || vec2[i - 1] <= vec2[i]);
                             if (!validInput) { break; }
-                            vec2.push_back(temp);
                         }
                         ClearBuffer();
                         if (validInput) { break; }

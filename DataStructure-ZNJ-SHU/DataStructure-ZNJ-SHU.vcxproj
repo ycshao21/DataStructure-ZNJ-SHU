@@ -31,6 +31,8 @@
     <ClInclude Include="Spring-Exp03-Search\data_structure\BinarySearchTree.h" />
     <ClInclude Include="Spring-Exp03-Search\data_structure\BinarySearchTreeNode.h" />
     <ClInclude Include="Spring-Exp03-Search\solutions\S3_Solutions.h" />
+    <ClInclude Include="Spring-Exp04-Sort\solutions\S4_DNASort.h" />
+    <ClInclude Include="Spring-Exp04-Sort\solutions\S4_QuickSort.h" />
     <ClInclude Include="Tools\MyExceptions.h" />
     <ClInclude Include="Tools\Random.hpp" />
     <ClInclude Include="Tools\Settings.hpp" />
@@ -50,6 +52,8 @@
     <ClCompile Include="Spring-Exp02-AdjacenctListWeightedUndirectedGraph\AdjListWUndirGraphTest.cpp" />
     <ClCompile Include="Spring-Exp03-Search\Search.cpp" />
     <ClCompile Include="Spring-Exp03-Search\solutions\S3_Solutions.cpp" />
+    <ClCompile Include="Spring-Exp04-Sort\solutions\S4_DNASort.cpp" />
+    <ClCompile Include="Spring-Exp04-Sort\Sort.cpp" />
     <ClCompile Include="Tools\Random.cpp" />
     <ClCompile Include="Tools\Settings.cpp" />
     <ClCompile Include="Winter-Exp01-InterviewArrangement\InterviewArrangement.cpp" />

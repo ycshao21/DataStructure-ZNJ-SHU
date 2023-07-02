@@ -87,6 +87,12 @@
     <ClInclude Include="Spring-Exp03-Search\data_structure\BinarySearchTreeNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Spring-Exp04-Sort\solutions\S4_QuickSort.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spring-Exp04-Sort\solutions\S4_DNASort.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Tools\Random.cpp">
@@ -135,6 +141,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Spring-Exp03-Search\solutions\S3_Solutions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Spring-Exp04-Sort\Sort.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Spring-Exp04-Sort\solutions\S4_DNASort.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
