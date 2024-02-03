@@ -42,9 +42,9 @@ namespace Winter01
             }
 
             if (choice == '1')
-                Winter01::Task01(N, K, M);
+                Task01(N, K, M);
             else
-                Winter01::Task02(N, K, M);
+                Task02(N, K, M);
 
             std::cout << std::endl;
             Console::WaitForKey();

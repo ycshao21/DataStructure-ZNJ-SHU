@@ -14,10 +14,7 @@ namespace Winter03
         std::string textPath = "data/text.txt";
         std::string outputDir = "output/";
 
-        Winter03::Task(patternPath, textPath, outputDir);
-
-        std::cout << std::endl;
-        Console::WaitForKey();
+        Task(patternPath, textPath, outputDir);
     }
 }
 

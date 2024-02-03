@@ -14,6 +14,7 @@ namespace Winter02
         {
             Console::Clear();
             std::cout << "冬-实验二 车厢调度\n\n";
+
             std::cout << "[1] 第一题\n";
             std::cout << "[2] 第二题\n";
             std::cout << "[3] 第一题的算法验证\n";
@@ -65,7 +66,7 @@ namespace Winter02
                     }
                     std::cout << "\n";
 
-                    Winter02::Task01(outputOrder, numOfCars);
+                    Task01(outputOrder, numOfCars);
 
                     std::cout << std::endl;
                     Console::WaitForKey();
@@ -111,7 +112,7 @@ namespace Winter02
                     }
                     std::cout << "\n";
 
-                    Winter02::Task02(inputOrder, numOfCars);
+                    Task02(inputOrder, numOfCars);
 
                     std::cout << std::endl;
                     Console::WaitForKey();
@@ -136,7 +137,7 @@ namespace Winter02
                     }
                     std::cout << "\n";
 
-                    Winter02::Task01_Validation(numOfCars);
+                    Task01_Validation(numOfCars);
 
                     std::cout << std::endl;
                     Console::WaitForKey();
@@ -161,7 +162,7 @@ namespace Winter02
                     }
                     std::cout << "\n";
 
-                    Winter02::Task02_Validation(numOfCars);
+                    Task02_Validation(numOfCars);
 
                     std::cout << std::endl;
                     Console::WaitForKey();

@@ -51,9 +51,8 @@ namespace Winter01
 
         // Initialize resumes, X and Y.
         Chain resumes;
-        for (int i = 1; i <= N; ++i) {
+        for (int i = 1; i <= N; ++i)
             resumes.PushBack(i);
-        }
         Node* X = resumes.GetFirstNode();
         Node* Y = X->prior;
 
@@ -68,7 +67,8 @@ namespace Winter01
                 // Y does not have to take the resume, because X will take it.
                 ans += std::format("{}; ", X->data);
             }
-            else {
+            else
+            {
                 ans += std::format("{0}, {1}; ", X->data, Y->data);
                 // Move one step further if X and Y are adjacent.
                 if (nextX == Y)

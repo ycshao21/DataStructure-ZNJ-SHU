@@ -16,7 +16,6 @@ namespace Console
 
     inline void WaitForKey()
     {
-        std::cout << "Press any key to continue...";
-        std::cin.get();
+        system("pause");
     }
 }
