@@ -80,7 +80,9 @@ namespace Winter02
                     holdingTrack.Pop();
                     ++nextCarToOutput;
                 }
-            } else {
+            }
+            else
+            {
                 if (!holdingTrack.IsEmpty() && holdingTrack.GetTop() < inputOrder[i])
                 {
                     success = false;

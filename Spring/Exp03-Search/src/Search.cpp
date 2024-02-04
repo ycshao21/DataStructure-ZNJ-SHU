@@ -12,8 +12,6 @@ namespace Spring03
 {
     void Search()
     {
-        char key;
-        bool validInput;
         while (true)
         {
             Console::Clear();
@@ -24,6 +22,7 @@ namespace Spring03
             std::cout << "[3] 二叉搜索树\n";
             std::cout << "[4] 退出" << std::endl;
 
+            char key;
             while ((key = _getch()) < '1' && key > '5');
 
             switch (key)
@@ -38,7 +37,7 @@ namespace Spring03
                     while (true)
                     {
                         std::cin >> aSize >> bSize >> cSize;
-                        validInput = aSize > 0 && bSize > 0 && cSize > 0;
+                        bool validInput = aSize > 0 && bSize > 0 && cSize > 0;
                         Console::ClearBuffer();
                         if (validInput)
                             break;
@@ -49,6 +48,7 @@ namespace Spring03
                     std::cout << "请输入第一个数组的元素：" << std::endl;
                     while (true)
                     {
+                        bool validInput = true;
                         for (int i = 0; i < aSize; i++)
                         {
                             std::cin >> a[i];
@@ -65,6 +65,7 @@ namespace Spring03
                     std::cout << "请输入第二个数组的元素：" << std::endl;
                     while (true)
                     {
+                        bool validInput = true;
                         for (int i = 0; i < bSize; i++)
                         {
                             std::cin >> b[i];
@@ -81,6 +82,7 @@ namespace Spring03
                     std::cout << "请输入第三个数组的元素：" << std::endl;
                     while (true)
                     {
+                        bool validInput = true;
                         for (int i = 0; i < cSize; i++)
                         {
                             std::cin >> c[i];
@@ -111,7 +113,7 @@ namespace Spring03
                     while (true)
                     {
                         std::cin >> m >> n;
-                        validInput = !std::cin.fail() && m > 0 && n > 0;
+                        bool validInput = !std::cin.fail() && m > 0 && n > 0;
                         Console::ClearBuffer();
                         if (validInput)
                             break;
@@ -128,6 +130,7 @@ namespace Spring03
                         std::cout << "请输入第一个数组的元素:" << std::endl;
                         while (true)
                         {
+                            bool validInput = true;
                             for (int i = 0; i < m; i++)
                             {
                                 std::cin >> vec1[i];
@@ -143,6 +146,7 @@ namespace Spring03
                         std::cout << "请输入第二个数组的元素: " << std::endl;
                         while (true)
                         {
+                            bool validInput = true;
                             for (int i = 0; i < n; i++)
                             {
                                 std::cin >> vec2[i];
