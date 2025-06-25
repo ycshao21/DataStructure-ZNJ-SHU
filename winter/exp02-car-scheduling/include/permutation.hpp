@@ -23,7 +23,7 @@ template <class T>
         return;
     }
 
-    for (int i = begin; i <= end; i++) {
+    for (int i = begin; i <= end; ++i) {
         std::swap(vec[begin], vec[i]);  // Let vec[i] be the prefix
         fullPermutation(vec, begin + 1, end, perms);
         std::swap(vec[begin], vec[i]);  // Restore the original state of vec.

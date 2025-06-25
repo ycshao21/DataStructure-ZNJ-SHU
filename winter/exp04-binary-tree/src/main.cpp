@@ -40,10 +40,10 @@ void exp04_binaryTree()
             }
 
             std::cout << "Please input the cases:\n";
-            for (int i = 0; i < numOfCases; i++) {
+            for (int i = 0; i < numOfCases; ++i) {
                 int a, b;
                 while (true) {
-                    std::cout << "(" << i + 1 << ") ";
+                    std::cout << std::format("({}) ", i + 1);
                     std::cin >> a >> b;
                     bool validInput = !std::cin.fail() && a > 0 && b > 0;
                     utils::clearBuffer();

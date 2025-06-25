@@ -14,7 +14,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Add experiment folders
 add_subdirectory(winter)
-# add_subdirectory(spring)
+add_subdirectory(spring)
 
 # Add utils library
 add_subdirectory(utils)

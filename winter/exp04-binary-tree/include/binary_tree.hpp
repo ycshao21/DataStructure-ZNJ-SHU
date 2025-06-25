@@ -393,7 +393,7 @@ void BinaryTree<T>::_print(BinaryTreeNode<T>* r, std::ostream& out)
                 q.push(curNodePtr->leftChild);
                 int slashPos = pos[curNodePtr->leftChild] + 1;
                 secondLine[slashPos] = '/';
-                for (int j = slashPos + 1; j < elemPos; j++) {
+                for (int j = slashPos + 1; j < elemPos; ++j) {
                     firstLine[j] = '_';
                 }
             }
@@ -409,7 +409,7 @@ void BinaryTree<T>::_print(BinaryTreeNode<T>* r, std::ostream& out)
                 q.push(curNodePtr->rightChild);
                 int backSlashPos = pos[curNodePtr->rightChild] - 1;
                 secondLine[backSlashPos] = '\\';
-                for (int j = backSlashPos - 1; j > elemPos; j--) {
+                for (int j = backSlashPos - 1; j > elemPos; --j) {
                     firstLine[j] = '_';
                 }
             }

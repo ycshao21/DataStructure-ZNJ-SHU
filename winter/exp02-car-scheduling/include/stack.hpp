@@ -144,7 +144,7 @@ Stack<T>::Stack(Stack<T>&& other) noexcept
     : m_data(other.m_data), m_topIndex(other.m_topIndex), m_capacity(other.m_capacity)
 {
     other.m_data = nullptr;
-    other.m_topIndex = static_cast<size_t>(-1);
+    other.m_topIndex = static_cast<std::size_t>(-1);
     other.m_capacity = 0;
 }
 
