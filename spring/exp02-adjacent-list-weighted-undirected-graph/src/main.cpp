@@ -5,7 +5,7 @@
 
 #include "utils/console.hpp"
 
-#include "adjacent_matrix_weighted_directed_graph.hpp"
+#include "adjacent_list_weighted_undirected_graph.hpp"
 #include "solution.hpp"
 
 static VT getVertex()
@@ -24,35 +24,34 @@ static VT getVertex()
     return v;
 }
 
-void exp01_adjMatWDirGraph()
+void exp02_adjListWUndirGraph()
 {
-    const std::array<std::string, 8> menu = {
-        "Insert Vertex", "Erase Vertex",  "Insert Edge", "Erase Edge",
-        "Degree",        "Shortest Path", "Clear",       "Exit"};
+    const std::array<std::string, 9> menu = {
+        "Insert Vertex", "Erase Vertex",        "Insert Edge",           "Erase Edge",
+        "Degree",        "Connected Component", "Minimum Spanning Tree", "Clear",
+        "Exit"};
 
     Graph g;
 
     while (true) {
-        std::cout << "Exp01 - Adjacent Matrix Weighted Directed Graph\n\n";
+        std::cout << "Exp02 - Adjacent List Weighted Undirected Graph\n\n";
 
         std::cout << "Edges:\n";
         g.printEdges();
         std::cout << '\n';
 
         std::cout << "Adjacent Matrix:\n";
-        g.printAdjacentMatrix();
+        g.printAdjacentList();
         std::cout << '\n';
 
-        // Print menu
         for (std::size_t i = 0; i < menu.size(); ++i) {
             std::cout << std::format("[{}] {} ", i + 1, menu[i]);
-            if (i == menu.size() / 2 - 1) {
+            if (i == menu.size() / 2) {
                 std::cout << '\n';
             }
         }
         std::cout << '\n';
 
-        // Get choice
         std::size_t choice = utils::getChoice(menu.size());
         if (choice == menu.size()) {
             return;
@@ -60,7 +59,7 @@ void exp01_adjMatWDirGraph()
 
         std::cout << std::string(60, '#') << '\n' << std::flush;
 
-        if (choice == 7) {
+        if (choice == 8) {
             g.clear();
             continue;
         }
@@ -117,21 +116,12 @@ void exp01_adjMatWDirGraph()
             break;
         }
         case 6: {
-            std::cout << "Please input the source and end vertex (<source vertex> <end "
-                         "vertex>): ";
-            VT src, end;
-            while (true) {
-                std::cin >> src >> end;
-                bool validInput = !std::cin.fail();
-                utils::clearBuffer();
-                if (validInput) {
-                    break;
-                }
-                std::cout << "Invalid input. Please re-input the source and end vertex "
-                             "(<source vertex> <end vertex>): ";
-            }
+            opt06_connectedComponent(g);
+            break;
+        }
 
-            opt06_shortestPath(g, src, end);
+        case 7: {
+            opt07_minimumSpanningTree(g);
             break;
         }
         }
@@ -143,5 +133,5 @@ void exp01_adjMatWDirGraph()
 int main()
 {
     std::filesystem::current_path(EXPERIMENT_WORKING_DIR);
-    exp01_adjMatWDirGraph();
+    exp02_adjListWUndirGraph();
 }

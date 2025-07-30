@@ -26,11 +26,11 @@ public:
         return m_data.empty();
     }
 
-    std::vector<T>& operator[](int idx)
+    std::vector<T>& operator[](std::size_t idx)
     {
         return m_data[idx];
     }
-    const std::vector<T>& operator[](int idx) const
+    const std::vector<T>& operator[](std::size_t idx) const
     {
         return m_data[idx];
     }

@@ -26,5 +26,5 @@
 ```
 
 ## 说明
-* 第二题存在简历永远取不完的情况（例如第一题的输入样例），通过推导可以得到判断条件，证明过程见[这里](notes/Condition-of-the-Endless-Loop-in-Task2.md).
+* 第二题存在简历永远取不完的情况（例如第一题的输入样例），通过推导可以得到判断条件，证明过程见[这里](notes/Condition-of-the-Endless-Loop-in-Task2.md)
 * 项目提供了效率测试功能, 该功能对第一题的多组输入计时，用于分析算法效率, 结束时会将结果保存到当前实验目录下的 `output/result.csv`

@@ -6,7 +6,7 @@
 #include <stack>
 #include <vector>
 
-#include "exceptions.hpp"
+#include "graph_exceptions.hpp"
 
 namespace myds
 {
@@ -16,12 +16,14 @@ class AdjMatWDirGraph;
 
 namespace algorithm
 {
+using IndexType = std::int64_t;
+
 template <class V>
-void printPath(const std::vector<V>& vertices, const std::vector<std::size_t>& path,
-               std::size_t srcIndex, std::size_t endIndex, std::ostream& out)
+void printPath(const std::vector<V>& vertices, const std::vector<IndexType>& path,
+               IndexType srcIndex, IndexType endIndex, std::ostream& out)
 {
-    std::stack<std::size_t> st;
-    std::size_t curIndex = endIndex;
+    std::stack<IndexType> st;
+    IndexType curIndex = endIndex;
     while (curIndex != srcIndex) {
         st.push(curIndex);
         curIndex = path[curIndex];
@@ -42,40 +44,40 @@ void dijkstra(const myds::AdjMatWDirGraph<V, W, inf>& g, const V& src, const V& 
     for (const auto& row : g.m_adjMat) {
         for (const W& w : row) {
             if (w != inf && w < 0) {
-                throw NegativeEdge();
+                throw NegativeEdgeException();
             }
         }
     }
 
     std::size_t numVertices = g.getNumOfVertices();
 
-    std::size_t srcIndex = g.getIndexOfVertex(src);
-    std::size_t endIndex = g.getIndexOfVertex(end);
-    if (srcIndex >= numVertices || endIndex >= numVertices) {
-        throw VertexNotFound();
-    }
+    IndexType srcIndex = g.getIndexOfVertex(src);
+    g.checkIndex(srcIndex);
+
+    IndexType endIndex = g.getIndexOfVertex(end);
+    g.checkIndex(endIndex);
 
     std::vector<uint8_t> visited(numVertices, 0);
     std::vector<W> dists(numVertices, inf);
     dists[srcIndex] = 0;
-    std::vector<std::size_t> path(numVertices, static_cast<std::size_t>(-1));
+    std::vector<IndexType> path(numVertices, -1);
 
     struct VertexNode
     {
-        W dist = inf;                                        // Distance to the vertex.
-        std::size_t toIndex = static_cast<std::size_t>(-1);  // Index of the end vertex.
+        W dist = inf;            // Distance to the vertex.
+        IndexType toIndex = -1;  // Index of the end vertex.
 
         bool operator>(const VertexNode& rhs) const
         {
             return dist > rhs.dist;
         }
     };
-    std::priority_queue<VertexNode, std::vector<VertexNode>, std::greater<>> pq;
-    pq.emplace(0, srcIndex);
+    std::priority_queue<VertexNode, std::vector<VertexNode>, std::greater<>> minHeap;
+    minHeap.emplace(0, srcIndex);
 
-    while (!pq.empty()) {
-        auto [minDist, u] = pq.top();
-        pq.pop();
+    while (!minHeap.empty()) {
+        auto [minDist, u] = minHeap.top();
+        minHeap.pop();
 
         // Skip visited vertices.
         if (visited[u] == 1) {
@@ -85,7 +87,7 @@ void dijkstra(const myds::AdjMatWDirGraph<V, W, inf>& g, const V& src, const V& 
         visited[u] = 1;
 
         // Update the distance of its adjacent vertices if it is shorter.
-        for (std::size_t v = 0; v < numVertices; ++v) {
+        for (IndexType v = 0; v < (IndexType) numVertices; ++v) {
             if (visited[v] == 0 &&
                 g.m_adjMat[u][v] != inf) {  // Skip itself and unreachable vertices.
                 W newDist = minDist + g.m_adjMat[u][v];
@@ -93,7 +95,7 @@ void dijkstra(const myds::AdjMatWDirGraph<V, W, inf>& g, const V& src, const V& 
                     // Update
                     dists[v] = newDist;
                     path[v] = u;
-                    pq.emplace(newDist, v);
+                    minHeap.emplace(newDist, v);
                 }
             }
         }
@@ -117,26 +119,26 @@ void bellmanFord(const myds::AdjMatWDirGraph<V, W, inf>& g, const V& src, const 
 {
     std::size_t numVertices = g.getNumOfVertices();
 
-    std::size_t srcIndex = g.getIndexOfVertex(src);
-    std::size_t endIndex = g.getIndexOfVertex(end);
-    if (srcIndex >= numVertices || endIndex >= numVertices) {
-        throw VertexNotFound();
-    }
+    IndexType srcIndex = g.getIndexOfVertex(src);
+    g.checkIndex(srcIndex);
+
+    IndexType endIndex = g.getIndexOfVertex(end);
+    g.checkIndex(endIndex);
 
     std::vector<W> dists(numVertices, inf);
     dists[srcIndex] = 0;
-    std::vector<std::size_t> path(numVertices, static_cast<std::size_t>(-1));
+    std::vector<IndexType> path(numVertices, -1);
 
     // Loop for |V| - 1 times.
     bool relaxed = false;
-    for (std::size_t i = 0; i < numVertices - 1; ++i) {
+    for (std::size_t t = 0; t < numVertices - 1; ++t) {
         relaxed = false;
         // Traverse all edges.
-        for (std::size_t u = 0; u < numVertices; ++u) {
+        for (IndexType u = 0; u < (IndexType) numVertices; ++u) {
             if (dists[u] == inf) {
                 continue;
             }
-            for (std::size_t v = 0; v < numVertices; ++v) {
+            for (IndexType v = 0; v < (IndexType) numVertices; ++v) {
                 if (g.m_adjMat[u][v] == inf) {  // Skip unreachable vertices.
                     continue;
                 }
@@ -156,20 +158,20 @@ void bellmanFord(const myds::AdjMatWDirGraph<V, W, inf>& g, const V& src, const 
 
     if (relaxed) {
         // If edges can still be relaxed, there is a negative cycle.
-        for (std::size_t u = 0; u < numVertices; ++u) {
+        for (IndexType u = 0; u < (IndexType) numVertices; ++u) {
             // Skip unreachable vertices.
             if (dists[u] == inf) {
                 continue;
             }
 
-            for (std::size_t v = 0; v < numVertices; ++v) {
+            for (IndexType v = 0; v < (IndexType) numVertices; ++v) {
                 if (g.m_adjMat[u][v] == inf) {
                     continue;
                 }
 
                 W newDist = dists[u] + g.m_adjMat[u][v];
                 if (newDist < dists[v]) {
-                    throw NegativeCycle();
+                    throw NegativeCycleException();
                 }
             }
         }
@@ -188,28 +190,28 @@ void bellmanFord(const myds::AdjMatWDirGraph<V, W, inf>& g, const V& src, const 
 }
 
 template <class V, class W, W inf>
-void floydWarshall(const myds::AdjMatWDirGraph<V, W, inf>& g, const V& source,
-                   const V& end, std::ostream* out = &std::cout)
+void floydWarshall(const myds::AdjMatWDirGraph<V, W, inf>& g, const V& src, const V& end,
+                   std::ostream* out = &std::cout)
 {
     std::size_t numVertices = g.getNumOfVertices();
 
-    std::size_t srcIndex = g.getIndexOfVertex(source);
-    std::size_t endIndex = g.getIndexOfVertex(end);
-    if (srcIndex >= numVertices || endIndex >= numVertices) {
-        throw VertexNotFound();
-    }
+    IndexType srcIndex = g.getIndexOfVertex(src);
+    g.checkIndex(srcIndex);
+
+    IndexType endIndex = g.getIndexOfVertex(end);
+    g.checkIndex(endIndex);
 
     std::vector<std::vector<W>> dists(numVertices, std::vector<W>(numVertices));
-    for (std::size_t u = 0; u < numVertices; ++u) {
-        for (std::size_t v = 0; v < numVertices; ++v) {
+    for (IndexType u = 0; u < (IndexType) numVertices; ++u) {
+        for (IndexType v = 0; v < (IndexType) numVertices; ++v) {
             dists[u][v] = (u == v) ? 0 : g.m_adjMat[u][v];
         }
     }
 
-    std::vector<std::vector<std::size_t>> paths(
-        numVertices, std::vector<std::size_t>(numVertices, static_cast<std::size_t>(-1)));
-    for (std::size_t u = 0; u < numVertices; ++u) {
-        for (std::size_t v = 0; v < numVertices; ++v) {
+    std::vector<std::vector<IndexType>> paths(numVertices,
+                                              std::vector<IndexType>(numVertices, -1));
+    for (IndexType u = 0; u < (IndexType) numVertices; ++u) {
+        for (IndexType v = 0; v < (IndexType) numVertices; ++v) {
             if (u != v && g.m_adjMat[u][v] != inf) {
                 paths[u][v] = u;
             }
@@ -217,9 +219,9 @@ void floydWarshall(const myds::AdjMatWDirGraph<V, W, inf>& g, const V& source,
     }
 
     // Find the shortest paths for each pair of vertices.
-    for (std::size_t k = 0; k < numVertices; ++k) {
-        for (std::size_t i = 0; i < numVertices; ++i) {
-            for (std::size_t j = 0; j < numVertices; ++j) {
+    for (IndexType k = 0; k < (IndexType) numVertices; ++k) {
+        for (IndexType i = 0; i < (IndexType) numVertices; ++i) {
+            for (IndexType j = 0; j < (IndexType) numVertices; ++j) {
                 if (dists[i][k] == inf || dists[k][j] == inf) {
                     continue;
                 }
@@ -229,7 +231,7 @@ void floydWarshall(const myds::AdjMatWDirGraph<V, W, inf>& g, const V& source,
                     // If the distance from a vertex to itself is negative, there is a
                     // negative cycle.
                     if (newDist < 0) {
-                        throw NegativeCycle();
+                        throw NegativeCycleException();
                     }
                 } else {
                     // If the distance from i to j through k is shorter, update the path.
