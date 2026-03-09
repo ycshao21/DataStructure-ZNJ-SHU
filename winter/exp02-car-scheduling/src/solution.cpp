@@ -4,7 +4,7 @@
 
 #include "stack.hpp"
 
-bool task01(const std::vector<int>& outputOrder, int numOfCars, std::ostream* out)
+bool runTask01(const std::vector<int>& outputOrder, int numOfCars, std::ostream* out)
 {
     myds::Stack<int> holdingTrack(numOfCars - 1);
     int checkingCar = 1;
@@ -47,7 +47,7 @@ bool task01(const std::vector<int>& outputOrder, int numOfCars, std::ostream* ou
     return true;
 }
 
-bool task02(const std::vector<int>& inputOrder, int numOfCars, std::ostream* out)
+bool runTask02(const std::vector<int>& inputOrder, int numOfCars, std::ostream* out)
 {
     myds::Stack<int> holdingTrack(numOfCars - 1);
     int nextCarToOutput = 1;

@@ -26,7 +26,7 @@ void efficiencyTest()
 
             {
                 utils::Timer timer;
-                task01(n, k, m, nullptr);
+                runTask01(n, k, m, nullptr);
                 double elapsed = timer.elapsed();
                 std::cout << std::format("Elapsed time: {} s\n", elapsed);
                 resultFile << std::format("{},{},{},{}\n", n, k, m, elapsed)

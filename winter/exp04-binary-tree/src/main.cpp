@@ -25,7 +25,7 @@ void exp04_binaryTree()
         std::cout << std::format("\n[{}]\n", menu[choice - 1]);
 
         if (choice == 1) {
-            task01();
+            runTask01();
         } else {
             std::cout << "Please input the number of cases: ";
             int numOfCases;
@@ -52,7 +52,7 @@ void exp04_binaryTree()
                     }
                     std::cout << "Invalid input! Please re-input the cases: ";
                 }
-                task02(a, b);
+                runTask02(a, b);
             }
         }
 

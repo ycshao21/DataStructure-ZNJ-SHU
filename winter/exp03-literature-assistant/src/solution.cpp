@@ -69,8 +69,8 @@ void readPatterns(std::ifstream& fPattern, std::vector<std::string>& patterns,
     }
 }
 
-void task(const std::filesystem::path& patternPath, const std::filesystem::path& textPath,
-          const std::filesystem::path& outputDir)
+void runTask(const std::filesystem::path& patternPath, const std::filesystem::path& textPath,
+             const std::filesystem::path& outputDir)
 {
     std::cout << std::format("Reading patterns from \"{}\"...", patternPath.string());
     std::ifstream fPattern(patternPath);

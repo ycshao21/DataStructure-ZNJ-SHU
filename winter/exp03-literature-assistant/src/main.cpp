@@ -11,7 +11,7 @@ void exp03_literatureAssistant()
     std::filesystem::path textPath = "data/text.txt";
     std::filesystem::path outputDir = "output/";
 
-    task(patternPath, textPath, outputDir);
+    runTask(patternPath, textPath, outputDir);
 }
 
 int main()

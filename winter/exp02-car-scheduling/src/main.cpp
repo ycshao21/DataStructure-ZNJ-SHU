@@ -80,20 +80,20 @@ static void exp02_carScheduling()
             int numOfCars = getNumOfCars();
             std::vector<int> outOrder(numOfCars);
             getOrderOfCars(outOrder, numOfCars, "output");
-            task01(outOrder, numOfCars, &std::cout);
+            runTask01(outOrder, numOfCars, &std::cout);
         } else if (choice == 2) {
             int numOfCars = getNumOfCars();
             std::vector<int> inputOrder(numOfCars);
             getOrderOfCars(inputOrder, numOfCars, "input");
-            task02(inputOrder, numOfCars, &std::cout);
+            runTask02(inputOrder, numOfCars, &std::cout);
         } else if (choice == 3) {
-            stack_validation();
+            runStackValidation();
         } else if (choice == 4) {
             int numOfCars = getNumOfCars();
-            task01_validation(numOfCars);
+            runTask01_validation(numOfCars);
         } else if (choice == 5) {
             int numOfCars = getNumOfCars();
-            task02_validation(numOfCars);
+            runTask02_validation(numOfCars);
         }
 
         std::cout << '\n' << std::flush;

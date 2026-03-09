@@ -41,7 +41,6 @@ Diagnostics:
       readability-magic-numbers,
       readability-function-cognitive-complexity,
       modernize-avoid-c-arrays,
-      readability-math-missing-parentheses,
       readability-uppercase-literal-suffix,
       readability-identifier-naming,
       modernize-use-trailing-return-type,

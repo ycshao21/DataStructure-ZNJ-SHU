@@ -1,4 +1,4 @@
 #pragma once
 
-void task01();
-void task02(int a, int b);
+void runTask01();
+void runTask02(int a, int b);

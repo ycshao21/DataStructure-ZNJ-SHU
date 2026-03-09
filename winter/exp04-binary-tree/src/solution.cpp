@@ -3,7 +3,7 @@
 
 #include "binary_tree.hpp"
 
-void task01()
+void runTask01()
 {
     /*
      * Construct a binary tree t1:
@@ -40,7 +40,7 @@ void task01()
     std::cout << t1;
 }
 
-void task02(int a, int b)
+void runTask02(int a, int b)
 {
     int leftBranch = 0, rightBranch = 0;
     while (a > 1 && b > 1) {

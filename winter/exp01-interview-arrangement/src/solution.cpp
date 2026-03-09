@@ -121,7 +121,7 @@ void takeResumesForTask02(Node<int>*& x, Node<int>*& y, int newResume)
     y = yPrior;
 }
 
-void task01(int n, int k, int m, std::ostream* out)
+void runTask01(int n, int k, int m, std::ostream* out)
 {
     Node<int>* x = initResumes(n);
     Node<int>* y = x->prior;
@@ -159,7 +159,7 @@ void task01(int n, int k, int m, std::ostream* out)
     cleanupResumes(x);
 }
 
-void task02(int n, int k, int m, std::ostream* out)
+void runTask02(int n, int k, int m, std::ostream* out)
 {
     Node<int>* x = initResumes(n);
     Node<int>* y = x->prior;
@@ -174,7 +174,7 @@ void task02(int n, int k, int m, std::ostream* out)
             // Check if it is an endless loop.
             if ((k + m) % n == 1) {
                 if (out != nullptr) {
-                    (*out) << "...\nUnable to take all the resumes!";
+                    (*out) << "...Unable to take all the resumes!";
                 }
                 break;
             }

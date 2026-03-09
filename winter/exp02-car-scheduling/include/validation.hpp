@@ -1,7 +1,7 @@
 #pragma once
 
-void stack_validation();
+void runStackValidation();
 
 // Warning: The validation uses a O(n!) method.
-void task01_validation(int numOfCars);
-void task02_validation(int numOfCars);
+void runTask01_validation(int numOfCars);
+void runTask02_validation(int numOfCars);

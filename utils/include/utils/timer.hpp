@@ -10,6 +10,8 @@ public:
   ~Timer() = default;
 
   void reset() { m_start = std::chrono::high_resolution_clock::now(); }
+
+  // Return elapsed time in seconds.
   double elapsed() const {
     return std::chrono::duration_cast<std::chrono::duration<double>>(
                std::chrono::high_resolution_clock::now() - m_start)

@@ -54,11 +54,11 @@ struct TestObj
     ~TestObj()
     {
         delete[] arr;
-        std::cout << "TestObj of " << a << " destroyed.\n";
+        std::cout << std::format("TestObj of {} destroyed.\n", a);
     }
 };
 
-void stack_validation()
+void runStackValidation()
 {
     std::cout << "Construct an empty stack...\n";
     myds::Stack<TestObj> st;
@@ -92,7 +92,7 @@ void stack_validation()
     std::cout << "Destroy the stack...\n";
 }
 
-void task01_validation(int numOfCars)
+void runTask01_validation(int numOfCars)
 {
     // inputOrder = 1, 2, 3, ..., numOfCars
     std::vector<int> inputOrder(numOfCars);
@@ -113,7 +113,7 @@ void task01_validation(int numOfCars)
 
         std::cout << "Testing...\n";
         for (const auto& outputOrder : allPossibleOutputOrders) {
-            bool success = task01(outputOrder, numOfCars, nullptr);
+            bool success = runTask01(outputOrder, numOfCars, nullptr);
             if (!success) {
                 std::cout << "Failed while testing the output sequence: ";
                 for (int car : outputOrder) {
@@ -137,7 +137,7 @@ void task01_validation(int numOfCars)
 
         auto& perm = inputOrder;
         do {
-            bool success = task01(perm, numOfCars, nullptr);
+            bool success = runTask01(perm, numOfCars, nullptr);
             if (success) {
                 ++successCntInTest;
                 f << std::format("[{}] ", successCntInTest);
@@ -167,7 +167,7 @@ void task01_validation(int numOfCars)
                              successCntInTest, numOfFullPerms);
 }
 
-void task02_validation(int numOfCars)
+void runTask02_validation(int numOfCars)
 {
     // outOrder = 1, 2, 3, ..., numOfCars
     std::vector<int> outputOrder(numOfCars);
@@ -191,7 +191,7 @@ void task02_validation(int numOfCars)
 
         std::cout << "Testing...\n";
         for (const auto& inputOrder : allPossibleInputOrders) {
-            bool success = task02(inputOrder, numOfCars, nullptr);
+            bool success = runTask02(inputOrder, numOfCars, nullptr);
             if (!success) {
                 std::cout << "Failed while testing the input sequence: ";
                 for (int car : inputOrder) {
@@ -215,7 +215,7 @@ void task02_validation(int numOfCars)
 
         auto& perm = outputOrder;
         do {
-            bool success = task02(perm, numOfCars, nullptr);
+            bool success = runTask02(perm, numOfCars, nullptr);
             if (success) {
                 ++successCntInTest;
                 f << std::format("[{}] ", successCntInTest);

@@ -44,11 +44,11 @@ static void exp01_interviewArrangement()
         if (choice == 1) {
             int n, k, m;
             getInputValues(n, k, m);
-            task01(n, k, m, &std::cout);
+            runTask01(n, k, m, &std::cout);
         } else if (choice == 2) {
             int n, k, m;
             getInputValues(n, k, m);
-            task02(n, k, m, &std::cout);
+            runTask02(n, k, m, &std::cout);
         } else if (choice == 3) {
             efficiencyTest();
         }
