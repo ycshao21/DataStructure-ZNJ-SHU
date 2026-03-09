@@ -1,11 +1,19 @@
-# Directories
+# Visual Studio
 .vs/
-bin/
-bin-int/
-output/
-
-# Files
 **.user
 **.sln
 **.vcxproj
 **.filters
+
+# Visual Studio Code
+.vscode/
+
+# Clangd
+.cache/
+
+# Build
+build/
+out/
+
+# Output
+output/

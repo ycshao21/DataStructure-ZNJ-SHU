@@ -1,0 +1,42 @@
+Language:     Cpp
+BasedOnStyle: Microsoft
+
+AccessModifierOffset:   -4
+IndentWidth:            4
+UseTab:                 Never
+TabWidth:               4
+IndentPPDirectives: BeforeHash
+
+BreakBeforeBraces:       Custom
+BraceWrapping:
+  AfterClass:            true
+  AfterControlStatement: false
+  AfterEnum:             true
+  AfterFunction:         true
+  AfterNamespace:        true
+  AfterStruct:           true
+  AfterUnion:            true
+  BeforeCatch:           false
+  BeforeElse:            false
+  SplitEmptyFunction:    true
+  SplitEmptyRecord:      true
+  SplitEmptyNamespace:   true
+
+PointerAlignment:        Left
+
+SpaceAfterCStyleCast:         true
+SpacesBeforeTrailingComments: 2
+SpaceBeforeParens:            ControlStatements
+
+AlignAfterOpenBracket:        Align
+AlignConsecutiveAssignments:  false
+AlignConsecutiveDeclarations: false
+AlignTrailingComments:        true
+AlignOperands:                true
+
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+ConstructorInitializerIndentWidth: 4
+
+AlwaysBreakTemplateDeclarations: Yes
+
+ColumnLimit: 90

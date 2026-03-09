@@ -1,0 +1,66 @@
+CompileFlags:
+  Add: 
+    - -Wall
+    - -Wextra
+    - -Werror
+  Remove:
+    - -fconcepts-diagnostics-depth=*
+    - -ccbin
+    - -forward-unknown-to-host-compiler
+    - -rdc=true
+    - -gencode
+    - --generate-code*
+    - --diag_suppress=*
+    - --expt-relaxed-constexpr
+    - --expt-extended-lambda
+    - -Xcompiler*
+    - -arch=*
+    - -fmodules*
+    - -fmodule-mapper*
+    - -fdeps-format*
+
+Index:
+  Background: Build
+  StandardLibrary: Yes
+
+Diagnostics:
+  UnusedIncludes: None
+  MissingIncludes: None
+
+  ClangTidy:
+    Add: [
+      performance-*,
+      modernize-*,
+      clang-analyzer-*,
+      readability-*,
+    ]
+
+    Remove: [
+      readability-isolate-declaration,
+      readability-identifier-length,
+      readability-magic-numbers,
+      readability-function-cognitive-complexity,
+      modernize-avoid-c-arrays,
+      readability-uppercase-literal-suffix,
+      readability-identifier-naming,
+      modernize-use-trailing-return-type,
+      modernize-use-nodiscard,
+    ]
+
+    CheckOptions:
+      readability-identifier-naming.VariableCase: aNy_CasE
+      readability-identifier-naming.ProtectedMemberCase: aNy_CasE
+      readability-identifier-naming.PrivateMemberCase: aNy_CasE
+      readability-identifier-naming.PublicMemberCase: aNy_CasE
+      readability-identifier-naming.NamespaceCase: lower_case
+      readability-identifier-naming.EnumCase: aNy_CasE
+      readability-identifier-naming.ClassCase: CamelCase
+      readability-identifier-naming.StructCase: aNy_CasE
+      readability-identifier-naming.FunctionCase: aNy_CasE
+      readability-identifier-naming.ClassMethodCase: aNy_CasE
+      readability-identifier-naming.ClassStaticMethodCase: aNy_CasE
+      readability-identifier-naming.ClassStaticFieldCase: aNy_CasE
+      readability-identifier-naming.ClassFieldCase: aNy_CasE
+      readability-identifier-naming.ClassConstantCase: aNy_CasE
+      readability-identifier-naming.ClassEnumCase: aNy_CasE
+      readability-identifier-naming.ClassEnumValueCase: aNy_CasE
