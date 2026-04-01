@@ -1,5 +1,5 @@
 #include <format>
-#include <iostream>
+#include <print>
 
 #include "graph_exceptions.hpp"
 #include "shortest_path.hpp"
@@ -10,8 +10,7 @@ void opt01_insertVertex(Graph& g, const VT& v)
     try {
         g.insertVertex(v);
     } catch (DuplicateVertexException) {
-        std::cout << std::format(
-            "[WARNING] Vertex \"{}\" is already in the graph. Skip.\n", v);
+        std::println("[WARNING] Vertex \"{}\" is already in the graph. Skip.", v);
     }
 }
 
@@ -20,8 +19,7 @@ void opt02_eraseVertex(Graph& g, const VT& v)
     try {
         g.eraseVertex(v);
     } catch (VertexNotFoundException) {
-        std::cout << std::format("[WARNING] Vertex \"{}\" is not in the graph. Skip.\n",
-                                 v);
+        std::println("[WARNING] Vertex \"{}\" is not in the graph. Skip.", v);
     }
 }
 
@@ -30,15 +28,13 @@ void opt03_insertEdge(Graph& g, const VT& from, const VT& to, const WT& weight)
     try {
         g.insertEdge(from, to, weight);
     } catch (VertexNotFoundException) {
-        std::cout << std::format("[ERROR] Vertex \"{}\" or \"{}\" is not in the graph!\n",
-                                 from, to);
+        std::println("[ERROR] Vertex \"{}\" or \"{}\" is not in the graph!", from, to);
     } catch (SelfLoopNotAllowedException) {
-        std::cout << "[ERROR] Self loop is not allowed!\n";
+        std::println("[ERROR] Self loop is not allowed!");
     } catch (InvalidWeightException) {
-        std::cout << "[ERROR] Invalid weight!\n";
+        std::println("[ERROR] Invalid weight!");
     } catch (DuplicateEdgeException) {
-        std::cout << std::format(
-            "[WARNING] Edge <\"{}\", \"{}\"> is already in the graph. Skip.\n", from, to);
+        std::println("[WARNING] Edge <\"{}\", \"{}\"> is already in the graph. Skip.", from, to);
     }
 }
 
@@ -47,62 +43,57 @@ void opt04_eraseEdge(Graph& g, const VT& from, const VT& to)
     try {
         g.eraseEdge(from, to);
     } catch (VertexNotFoundException) {
-        std::cout << std::format("[ERROR] Vertex \"{}\" or \"{}\" is not in the graph!\n",
-                                 from, to);
+        std::println("[ERROR] Vertex \"{}\" or \"{}\" is not in the graph!", from, to);
     } catch (EdgeNotFoundException) {
-        std::cout << std::format(
-            "[WARNING] Edge <\"{}\", \"{}\"> is not in the graph. Skip.\n", from, to);
+        std::println("[WARNING] Edge <\"{}\", \"{}\"> is not in the graph. Skip.", from, to);
     }
 }
 
 void opt05_degree(const Graph& g, const VT& v)
 {
     try {
-        std::cout << std::format("Degree: {}\n", g.countDegree(v));
-        std::cout << std::format("Out-degree: {}\n", g.countOutDegree(v));
-        std::cout << std::format("In-degree: {}\n", g.countInDegree(v));
+        std::println("Degree: {}", g.countDegree(v));
+        std::println("Out-degree: {}", g.countOutDegree(v));
+        std::println("In-degree: {}", g.countInDegree(v));
     } catch (VertexNotFoundException) {
-        std::cout << std::format("[ERROR] Vertex \"{}\" is not in the graph!\n", v);
+        std::println("[ERROR] Vertex \"{}\" is not in the graph!", v);
     }
 }
 
 void opt06_shortestPath(const Graph& g, const VT& src, const VT& end)
 {
-    std::cout << "------------\n";
-    std::cout << "| Dijkstra |\n";
-    std::cout << "------------\n";
+    std::println("------------");
+    std::println("| Dijkstra |");
+    std::println("------------");
     try {
         algorithm::dijkstra(g, src, end);
     } catch (VertexNotFoundException) {
-        std::cout << std::format("[ERROR] Vertex \"{}\" or \"{}\" is not in the graph!\n",
-                                 src, end);
+        std::println("[ERROR] Vertex \"{}\" or \"{}\" is not in the graph!", src, end);
     } catch (NegativeEdgeException) {
-        std::cout << "[ERROR] Negative edge is not allowed in Dijkstra algorithm!\n";
+        std::println("[ERROR] Negative edge is not allowed in Dijkstra algorithm!");
     }
-    std::cout << '\n';
+    std::println();
 
-    std::cout << "----------------\n";
-    std::cout << "| Bellman-Ford |\n";
-    std::cout << "----------------\n";
+    std::println("----------------");
+    std::println("| Bellman-Ford |");
+    std::println("----------------");
     try {
         algorithm::bellmanFord(g, src, end);
     } catch (VertexNotFoundException) {
-        std::cout << std::format("[ERROR] Vertex \"{}\" or \"{}\" is not in the graph!\n",
-                                 src, end);
+        std::println("[ERROR] Vertex \"{}\" or \"{}\" is not in the graph!", src, end);
     } catch (NegativeCycleException) {
-        std::cout << "[ERROR] Negative cycle is detected!\n";
+        std::println("[ERROR] Negative cycle is detected!");
     }
-    std::cout << '\n';
+    std::println();
 
-    std::cout << "------------------\n";
-    std::cout << "| Floyd-Warshall |\n";
-    std::cout << "------------------\n";
+    std::println("------------------");
+    std::println("| Floyd-Warshall |");
+    std::println("------------------");
     try {
         algorithm::floydWarshall(g, src, end);
     } catch (VertexNotFoundException) {
-        std::cout << std::format("[ERROR] Vertex \"{}\" or \"{}\" is not in the graph!\n",
-                                 src, end);
+        std::println("[ERROR] Vertex \"{}\" or \"{}\" is not in the graph!", src, end);
     } catch (NegativeCycleException) {
-        std::cout << "[ERROR] Negative cycle is detected!\n";
+        std::println("[ERROR] Negative cycle is detected!");
     }
 }

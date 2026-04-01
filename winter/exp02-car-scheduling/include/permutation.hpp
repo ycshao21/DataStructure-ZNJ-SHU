@@ -3,33 +3,8 @@
 
 #include "stack.hpp"
 
-namespace algorithm
+namespace myalgorithm
 {
-/* Generate full permutation of elements in {vec}:
- *   Let set E be {e_1, e_2, e_3, ..., e_n}.
- *   Define E_i as the set containing all the elements in E except e_i.
- *   Define perm(X) as the full permutation of set X.
- *   If n=1, perm(E)={e_1};
- *   If n>1, perm(E)={e_1.perm(E_1), e_2.perm(E_2), ..., e_n.perm(E_n)}, where
- * e_i is prefix and perm(E_i) is suffix. Each suffix keeps splitting until it only
- * contains one element (indicating the end of recursion).
- */
-template <class T>
-[[deprecated]] void fullPermutation(std::vector<T>& vec, int begin, int end,
-                                    std::vector<std::vector<T>>& perms)
-{
-    if (begin == end) {
-        perms.push_back(vec);
-        return;
-    }
-
-    for (int i = begin; i <= end; ++i) {
-        std::swap(vec[begin], vec[i]);  // Let vec[i] be the prefix
-        fullPermutation(vec, begin + 1, end, perms);
-        std::swap(vec[begin], vec[i]);  // Restore the original state of vec.
-    }
-}
-
 namespace internal
 {
 /*
@@ -79,5 +54,31 @@ void generateAllStackOutput(const std::vector<T>& inputOrder,
     std::vector<T> outOrder;
     internal::generateAllStackOutput(inputOrder, 0, st, outOrder, outOrders);
 }
+
+/* Generate full permutation of elements in {vec}:
+ *   Let set E be {e_1, e_2, e_3, ..., e_n}.
+ *   Define E_i as the set containing all the elements in E except e_i.
+ *   Define perm(X) as the full permutation of set X.
+ *   If n=1, perm(E)={e_1};
+ *   If n>1, perm(E)={e_1.perm(E_1), e_2.perm(E_2), ..., e_n.perm(E_n)}, where
+ * e_i is prefix and perm(E_i) is suffix. Each suffix keeps splitting until it only
+ * contains one element (indicating the end of recursion).
+ */
+template <class T>
+[[deprecated]] void generateFullPermutation(std::vector<T>& vec, int begin, int end,
+                                    std::vector<std::vector<T>>& perms)
+{
+    if (begin == end) {
+        perms.push_back(vec);
+        return;
+    }
+
+    for (int i = begin; i <= end; ++i) {
+        std::swap(vec[begin], vec[i]);  // Let vec[i] be the prefix
+        generateFullPermutation(vec, begin + 1, end, perms);
+        std::swap(vec[begin], vec[i]);  // Restore the original state of vec.
+    }
+}
+
 
 }  // namespace algorithm

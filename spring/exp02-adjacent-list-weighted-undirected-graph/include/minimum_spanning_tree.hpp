@@ -2,6 +2,7 @@
 #include <format>
 #include <iostream>
 #include <limits>
+#include <print>
 #include <queue>
 #include <sstream>
 #include <stack>
@@ -59,8 +60,8 @@ W kruskal(const myds::AdjListWUndirGraph<V, W, inf>& g, std::ostream* out = &std
     std::size_t numVertices = g.getNumOfVertices();
     if (numVertices == 1) {
         if (out) {
-            (*out) << "No edge.\n"
-                   << "Total weight: 0\n";
+            std::println(*out, "No edge.");
+            std::println(*out, "Total weight: 0");
         }
         return 0;
     }
@@ -95,15 +96,15 @@ W kruskal(const myds::AdjListWUndirGraph<V, W, inf>& g, std::ostream* out = &std
             vertSet.unite(fromRoot, toRoot);
             ++cnt;
             if (out) {
-                (*out) << std::format("({}) ({}, {}): {}\n", cnt,
-                                      g.m_vertices[curEdge.fromIndex],
-                                      g.m_vertices[curEdge.toIndex], curEdge.weight);
+                std::println(*out, "({}) ({}, {}): {}", cnt,
+                             g.m_vertices[curEdge.fromIndex],
+                             g.m_vertices[curEdge.toIndex], curEdge.weight);
             }
             totalWeight += curEdge.weight;
         }
     }
     if (out) {
-        (*out) << std::format("Total weight: {}\n", totalWeight);
+        std::println(*out, "Total weight: {}", totalWeight);
     }
     return totalWeight;
 }
@@ -114,8 +115,8 @@ W prim(const myds::AdjListWUndirGraph<V, W, inf>& g, std::ostream* out = &std::c
     std::size_t numVertices = g.getNumOfVertices();
     if (numVertices == 1) {
         if (out) {
-            (*out) << "No edge.\n"
-                   << "Total weight: 0" << std::endl;
+            std::println(*out, "No edge.");
+            std::println(*out, "Total weight: 0");
         }
         return 0;
     }
@@ -147,9 +148,8 @@ W prim(const myds::AdjListWUndirGraph<V, W, inf>& g, std::ostream* out = &std::c
 
         ++cnt;
         if (out) {
-            (*out) << std::format("({}) ({}, {}): {}\n", cnt,
-                                  g.m_vertices[curEdge.fromIndex],
-                                  g.m_vertices[curEdge.toIndex], curEdge.weight);
+            std::println(*out, "({}) ({}, {}): {}", cnt, g.m_vertices[curEdge.fromIndex],
+                         g.m_vertices[curEdge.toIndex], curEdge.weight);
         }
         totalWeight += curEdge.weight;
 
@@ -161,7 +161,7 @@ W prim(const myds::AdjListWUndirGraph<V, W, inf>& g, std::ostream* out = &std::c
         }
     }
     if (out) {
-        (*out) << std::format("Total weight: {}\n", totalWeight);
+        std::println(*out, "Total weight: {}", totalWeight);
     }
     return totalWeight;
 }
@@ -173,8 +173,8 @@ W reverseDelete(const myds::AdjListWUndirGraph<V, W, inf>& g,
     std::size_t numVertices = g.getNumOfVertices();
     if (numVertices == 1) {
         if (out) {
-            (*out) << "No edge.\n"
-                   << "Total weight: 0\n";
+            std::println(*out, "No edge.");
+            std::println(*out, "Total weight: 0");
         }
         return 0;
     }
@@ -226,16 +226,15 @@ W reverseDelete(const myds::AdjListWUndirGraph<V, W, inf>& g,
         for (const auto& e : mst.m_adjLists[fromIndex]) {
             if (fromIndex < e.toIndex) {
                 if (out) {
-                    (*out) << std::format("({}) ({}, {}): {}\n", cnt,
-                                          mst.m_vertices[fromIndex],
-                                          mst.m_vertices[e.toIndex], e.weight);
+                    std::println(*out, "({}) ({}, {}): {}", ++cnt, mst.m_vertices[fromIndex],
+                                 mst.m_vertices[e.toIndex], e.weight);
                 }
                 totalWeight += e.weight;
             }
         }
     }
     if (out) {
-        (*out) << std::format("Total weight: {}\n", totalWeight);
+        std::println(*out, "Total weight: {}", totalWeight);
     }
 
     return totalWeight;
@@ -258,7 +257,6 @@ bool findTreePath(const myds::AdjListWUndirGraph<V, W, inf>& tree, IndexType pre
         if (findTreePath(tree, fromIndex, e.toIndex, endIndex, path)) {
             return true;
         }
-
         path.pop();
     }
     return false;

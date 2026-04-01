@@ -1,5 +1,5 @@
-#include <format>
-#include <iostream>
+#include <print>
+#include <ostream>
 #include <vector>
 
 #include "stack.hpp"
@@ -12,29 +12,26 @@ bool runTask01(const std::vector<int>& outputOrder, int numOfCars, std::ostream*
     for (int outputCar : outputOrder) {
         if (!holdingTrack.isEmpty() && holdingTrack.getTop() == outputCar) {
             if (out != nullptr) {
-                (*out) << std::format(
-                    "| -> Car {} drives from holding track to the right.\n", outputCar);
+                std::println(*out, "| -> Car {} drives from holding track to the right.", outputCar);
             }
             holdingTrack.pop();
         } else {
             while (checkingCar < outputCar) {
                 if (out != nullptr) {
-                    (*out) << std::format(
-                        "-> | Car {} drives from the left to holding track.\n",
-                        checkingCar);
+                    std::println(*out, "-> | Car {} drives from the left to holding track.", checkingCar);
                 }
                 holdingTrack.push(checkingCar);
                 ++checkingCar;
             }
             if (checkingCar == outputCar) {
                 if (out != nullptr) {
-                    (*out) << std::format(
-                        "->-> Car {} drives from the left to the right.\n", outputCar);
+                    std::println(*out, "->-> Car {} drives from the left to the right.", outputCar);
                 }
                 ++checkingCar;
             } else {
                 if (out != nullptr) {
-                    (*out) << "...\nERROR: Failed to schedule cars!\n";
+                    std::println(*out, "...");
+                    std::println(*out, "ERROR: Failed to schedule cars!");
                 }
                 return false;
             }
@@ -42,7 +39,7 @@ bool runTask01(const std::vector<int>& outputOrder, int numOfCars, std::ostream*
     }
 
     if (out != nullptr) {
-        (*out) << "Succeeded.\n";
+        std::println(*out, "Succeeded.");
     }
     return true;
 }
@@ -55,15 +52,12 @@ bool runTask02(const std::vector<int>& inputOrder, int numOfCars, std::ostream* 
     for (int inputCar : inputOrder) {
         if (inputCar == nextCarToOutput) {
             if (out != nullptr) {
-                (*out) << std::format("->-> Car {} drives from the left to the right.\n",
-                                      inputCar);
+                std::println(*out, "->-> Car {} drives from the left to the right.", inputCar);
             }
             ++nextCarToOutput;
             while (!holdingTrack.isEmpty() && holdingTrack.getTop() == nextCarToOutput) {
                 if (out != nullptr) {
-                    (*out) << std::format(
-                        "| -> Car {} drives from holding track to the right.\n",
-                        holdingTrack.getTop());
+                    std::println(*out, "| -> Car {} drives from holding track to the right.", holdingTrack.getTop());
                 }
                 holdingTrack.pop();
                 ++nextCarToOutput;
@@ -71,20 +65,20 @@ bool runTask02(const std::vector<int>& inputOrder, int numOfCars, std::ostream* 
         } else {
             if (!holdingTrack.isEmpty() && holdingTrack.getTop() < inputCar) {
                 if (out != nullptr) {
-                    (*out) << "...\nERROR: Failed to schedule cars!\n";
+                    std::println(*out, "...");
+                    std::println(*out, "ERROR: Failed to schedule cars!");
                 }
                 return false;
             }
             holdingTrack.push(inputCar);
             if (out != nullptr) {
-                (*out) << std::format(
-                    "-> | Car {} drives from the left to holding track.\n", inputCar);
+                std::println(*out, "-> | Car {} drives from the left to holding track.", inputCar);
             }
         }
     }
 
     if (out != nullptr) {
-        (*out) << "Succeeded.\n";
+        std::println(*out, "Succeeded.");
     }
     return true;
 }

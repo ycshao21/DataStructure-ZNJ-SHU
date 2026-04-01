@@ -19,7 +19,7 @@ public:
     std::vector<T> generateVec(size_t size, T min, T max) const
     {
         std::vector<T> vec;
-        while (size--) {
+        while ((size--) != 0u) {
             vec.push_back(this->operator()(min, max));
         }
         return vec;
@@ -49,7 +49,7 @@ public:
     std::vector<T> generateVec(size_t size, T mean, T sigma) const
     {
         std::vector<T> vec;
-        while (size--) {
+        while ((size--) != 0u) {
             vec.push_back(this->operator()(mean, sigma));
         }
         return vec;

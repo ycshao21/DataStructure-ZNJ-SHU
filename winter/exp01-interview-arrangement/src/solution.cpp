@@ -1,5 +1,4 @@
-#include <format>
-#include <iostream>
+#include <print>
 #include <ostream>
 #include <string>
 
@@ -77,8 +76,8 @@ void takeResumesForTask01(Node<int>*& x, Node<int>*& y)
         y = y->prior;
     }
 
-    Node<int>* xNext = x->next;
-    Node<int>* yPrior = y->prior;
+    Node<int>* xUpdate = x->next;
+    Node<int>* yUpdate = y->prior;
 
     // Remove the node(s)
     if (x == y) {
@@ -101,13 +100,13 @@ void takeResumesForTask01(Node<int>*& x, Node<int>*& y)
 
     delete x;
 
-    x = xNext;
-    y = yPrior;
+    x = xUpdate;
+    y = yUpdate;
 }
 
 void takeResumesForTask02(Node<int>*& x, Node<int>*& y, int newResume)
 {
-    Node<int>* yPrior = y->prior;
+    Node<int>* yUpdate = y->prior;
 
     if (x != y) {
         // Remove Y.
@@ -118,7 +117,7 @@ void takeResumesForTask02(Node<int>*& x, Node<int>*& y, int newResume)
     }
 
     x->data = newResume;
-    y = yPrior;
+    y = yUpdate;
 }
 
 void runTask01(int n, int k, int m, std::ostream* out)
@@ -132,12 +131,12 @@ void runTask01(int n, int k, int m, std::ostream* out)
 
         if (x == y) {
             if (out != nullptr) {
-                (*out) << std::format("{}", x->data);
+                std::print(*out, "{}", x->data);
             }
             --n;
         } else {
             if (out != nullptr) {
-                (*out) << std::format("{}, {}", x->data, y->data);
+                std::print(*out, "{}, {}", x->data, y->data);
             }
             n -= 2;
         }
@@ -148,13 +147,13 @@ void runTask01(int n, int k, int m, std::ostream* out)
         }
 
         if (out != nullptr) {
-            (*out) << "; ";
+            std::print(*out, "; ");
         }
         takeResumesForTask01(x, y);
     }
 
     if (out != nullptr) {
-        (*out) << '\n';
+        std::println(*out);
     }
     cleanupResumes(x);
 }
@@ -174,17 +173,18 @@ void runTask02(int n, int k, int m, std::ostream* out)
             // Check if it is an endless loop.
             if ((k + m) % n == 1) {
                 if (out != nullptr) {
-                    (*out) << "...Unable to take all the resumes!";
+                    std::println(*out, "...");
+                    std::print(*out, "Unable to take all the resumes!");
                 }
                 break;
             }
 
             if (out != nullptr) {
-                (*out) << std::format("{}", x->data);
+                std::print(*out, "{}", x->data);
             }
         } else {
             if (out != nullptr) {
-                (*out) << std::format("{}, {}", x->data, y->data);
+                std::print(*out, "{}, {}", x->data, y->data);
             }
             --n;
         }
@@ -195,14 +195,14 @@ void runTask02(int n, int k, int m, std::ostream* out)
         }
 
         if (out != nullptr) {
-            (*out) << "; ";
+            std::print(*out, "; ");
         }
         takeResumesForTask02(x, y, newResume);
         ++newResume;
     }
 
     if (out != nullptr) {
-        (*out) << '\n';
+        std::println(*out);
     }
     cleanupResumes(x);
 }

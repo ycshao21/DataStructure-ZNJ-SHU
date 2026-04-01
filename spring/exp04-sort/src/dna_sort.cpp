@@ -1,3 +1,5 @@
+#include <print>
+
 #include "dna_sort.hpp"
 #include "quick_sort.hpp"
 
@@ -76,7 +78,7 @@ std::vector<std::string> dnaSort(const std::vector<std::string>& dnaVec,
 
     if (out != nullptr) {
         for (const auto& dna : sorted) {
-            (*out) << dna << std::endl;
+            std::println(*out, "{}", dna);
         }
     }
 

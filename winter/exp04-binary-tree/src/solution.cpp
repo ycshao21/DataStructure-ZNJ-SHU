@@ -1,5 +1,5 @@
 #include <format>
-#include <iostream>
+#include <print>
 
 #include "binary_tree.hpp"
 
@@ -29,15 +29,15 @@ void runTask01()
     myds::BinaryTree<int> t3(3, t5, t6);
     myds::BinaryTree<int> t1(1, t2, t3);
 
-    std::cout << "Initial tree:\n";
-    std::cout << t1;
-    std::cout << std::format("Size: {}\n", t1.getSize());
-    std::cout << std::format("Height: {}\n", t1.getHeight());
+    std::println("Initial tree:");
+    t1.print();
+    std::println("Size: {}", t1.getSize());
+    std::println("Height: {}", t1.getHeight());
 
     t1.revolute();
 
-    std::cout << "After revolute():\n";
-    std::cout << t1;
+    std::println("After revolute():");
+    t1.print();
 }
 
 void runTask02(int a, int b)
@@ -54,7 +54,7 @@ void runTask02(int a, int b)
     }
 
     if (a == 0 || b == 0) {
-        std::cout << "Node does not exist!\n";
+        std::println("Node does not exist!");
         return;
     }
     if (a == 1) {
@@ -62,5 +62,5 @@ void runTask02(int a, int b)
     } else {
         leftBranch += a - 1;
     }
-    std::cout << std::format("{} {}\n", leftBranch, rightBranch);
+    std::println("{} {}", leftBranch, rightBranch);
 }

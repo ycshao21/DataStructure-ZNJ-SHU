@@ -1,8 +1,7 @@
-#include <format>
+#include <print>
 #include <vector>
 #include <iostream>
 
-#include "binary_search_tree.hpp"
 #include "task01.hpp"
 
 void findMinCommonElement(const std::vector<int>& a, const std::vector<int>& b,
@@ -18,13 +17,13 @@ void findMinCommonElement(const std::vector<int>& a, const std::vector<int>& b,
             ++k;
         } else {
             if (out != nullptr) {
-                (*out) << std::format("{} {} {} {}\n", a[i], i + 1, j + 1, k + 1);
+                std::println(*out, "{} {} {} {}", a[i], i + 1, j + 1, k + 1);
             }
             return;
         }
     }
 
     if (out != nullptr) {
-        (*out) << "NOT FOUND\n";
+        std::println(*out, "NOT FOUND");
     }
 }

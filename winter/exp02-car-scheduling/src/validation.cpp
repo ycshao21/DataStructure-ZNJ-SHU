@@ -1,8 +1,7 @@
-#include <algorithm>
 #include <filesystem>
 #include <format>
 #include <fstream>
-#include <iostream>
+#include <print>
 #include <numeric>
 #include <vector>
 
@@ -17,17 +16,17 @@ struct TestObj
 
     TestObj(int aa) : a(aa), arr(new int[5])
     {
-        std::cout << "TestObj constructed.\n";
+        std::println("TestObj constructed.");
     }
     TestObj(const TestObj& other) : a(other.a), arr(new int[5])
     {
         std::copy(other.arr, other.arr + 5, arr);
-        std::cout << "TestObj copied.\n";
+        std::println("TestObj copied.");
     }
     TestObj(TestObj&& other) noexcept : a(other.a), arr(other.arr)
     {
         other.arr = nullptr;
-        std::cout << "TestObj moved.\n";
+        std::println("TestObj moved.");
     }
     TestObj& operator=(const TestObj& other)
     {
@@ -36,7 +35,7 @@ struct TestObj
             delete[] arr;
             arr = new int[5];
             std::copy(other.arr, other.arr + 5, arr);
-            std::cout << "TestObj copy assigned.\n";
+            std::println("TestObj copy assigned.");
         }
         return *this;
     }
@@ -47,49 +46,48 @@ struct TestObj
             delete[] arr;
             arr = other.arr;
             other.arr = nullptr;
-            std::cout << "TestObj move assigned.\n";
+            std::println("TestObj move assigned.");
         }
         return *this;
     }
     ~TestObj()
     {
         delete[] arr;
-        std::cout << std::format("TestObj of {} destroyed.\n", a);
+        std::println("TestObj of {} destroyed.", a);
     }
 };
 
 void runStackValidation()
 {
-    std::cout << "Construct an empty stack...\n";
+    std::println("Construting an empty stack...");
     myds::Stack<TestObj> st;
-    std::cout << std::format("Capacity={}, size={}\n", st.getCapacity(), st.getSize());
-    std::cout << std::format("Is empty? {}\n", st.isEmpty());
+    std::println("Capacity={}, size={}", st.getCapacity(), st.getSize());
+    std::println("Is empty? {}", st.isEmpty());
 
-    std::cout << "Push 1 TestObj into the stack (copy)...\n";
+    std::println("Push 1 TestObj into the stack (copy)...");
     TestObj obj(-5);
     st.push(obj);
 
-    std::cout << "Copy construct the stack...\n";
+    std::println("Copy construct the stack...");
     myds::Stack<TestObj> st2(st);
-    std::cout << std::format("Capacity={}, size={}\n", st2.getCapacity(), st2.getSize());
+    std::println("Capacity={}, size={}", st2.getCapacity(), st2.getSize());
 
-    std::cout << "Push 10 TestObj into the stack (move)...\n";
+    std::println("Push 10 TestObj into the stack (move)...");
     for (int i = 0; i < 10; ++i) {
         st.push(TestObj(i));
-        std::cout << std::format("Capacity={}, size={}. Is full? {}\n", st.getCapacity(),
-                                 st.getSize(), st.isFull());
+        std::println("Capacity={}, size={}. Is full? {}", st.getCapacity(),
+                     st.getSize(), st.isFull());
     }
 
-    std::cout << std::format("The top element is {}.\n", st.getTop().a);
+    std::println("The top element is {}.", st.getTop().a);
 
-    std::cout << "Pop 5 TestObj from the stack...\n";
+    std::println("Pop 5 TestObj from the stack...");
     for (int i = 0; i < 5; ++i) {
         st.pop();
-        std::cout << std::format("Capacity={}, size={}\n", st.getCapacity(),
-                                 st.getSize());
+        std::println("Capacity={}, size={}", st.getCapacity(), st.getSize());
     }
 
-    std::cout << "Destroy the stack...\n";
+    std::println("Destroy the stack...");
 }
 
 void runTask01_validation(int numOfCars)
@@ -102,69 +100,71 @@ void runTask01_validation(int numOfCars)
     std::size_t successCntInTest = 0;
     std::size_t numOfFullPerms = 0;
 
-    std::cout << "Step 1: Checking if the algorithm misses any successful cases.\n";
+    std::println();
+    std::println("Step 1: Checking if the algorithm misses any successful cases.");
     {
-        std::cout << "Calculating all possible stack output sequences...";
+        std::println("Calculating all possible stack output sequences...");
         std::vector<std::vector<int>> allPossibleOutputOrders;
-        algorithm::generateAllStackOutput(inputOrder, allPossibleOutputOrders);
+        myalgorithm::generateAllStackOutput(inputOrder, allPossibleOutputOrders);
         numOfSuccessfulCases = allPossibleOutputOrders.size();
+        std::println("Done.");
 
-        std::cout << "done.\n";
-
-        std::cout << "Testing...\n";
+        std::println("Testing...");
         for (const auto& outputOrder : allPossibleOutputOrders) {
             bool success = runTask01(outputOrder, numOfCars, nullptr);
             if (!success) {
-                std::cout << "Failed while testing the output sequence: ";
+                std::print("Failed while testing the output sequence: ");
                 for (int car : outputOrder) {
-                    std::cout << car << ' ';
+                    std::print("{} ", car);
                 }
-                std::cout << "\nPlease fix the algorithm!\n";
+                std::println();
+                std::println("Please fix the algorithm!");
                 return;
             }
         }
-        std::cout << "Passed (1/2).\n";
+        std::println("Passed (1/2).");
     }
 
-    std::cout << "Step 2: Checking if the algorithm mistakely accepts some "
-                 "failed cases.\n";
+    std::println();
+    std::println("Step 2: Checking if the algorithm mistakely accepts some failed cases.");
     {
-        std::cout << "Testing on full permutations...\n";
+        std::println("Testing on full permutations...");
 
         std::filesystem::path resultPath = "output/task01_validation_result.txt";
         std::filesystem::create_directories(resultPath.parent_path());
-        std::ofstream f(resultPath);
+        std::ofstream file(resultPath);
 
         auto& perm = inputOrder;
         do {
             bool success = runTask01(perm, numOfCars, nullptr);
             if (success) {
                 ++successCntInTest;
-                f << std::format("[{}] ", successCntInTest);
+                std::print(file, "[{}] ", successCntInTest);
                 for (int car : perm) {
-                    f << std::format("{} ", car);
+                    std::print(file, "{} ", car);
                 }
-                f << '\n' << std::flush;
+                std::println(file);
+                file.flush();
             }
             ++numOfFullPerms;
         } while (std::ranges::next_permutation(perm).found);
 
-        f.close();
+        file.close();
 
-        std::cout << std::format(
-            "All cases accepted by the algorithm have been saved to {}.\n",
+        std::println(
+            "All cases accepted by the algorithm have been saved to {}.",
             resultPath.string());
 
         if (successCntInTest != numOfSuccessfulCases) {
-            std::cout << "Failed. Please fix the algorithm!\n";
+            std::println("Failed. Please fix the algorithm!");
             return;
         }
-        std::cout << "Passed (2/2).\n";
+        std::println("Passed (2/2).");
     }
 
-    std::cout << std::format("Congratulations! All {}/{} successful cases are "
-                             "accepted by your algorithm! Good job!\n",
-                             successCntInTest, numOfFullPerms);
+    std::println();
+    std::println("Congratulations! All {}/{} successful cases are accepted by your algorithm! Good job!",
+                 successCntInTest, numOfFullPerms);
 }
 
 void runTask02_validation(int numOfCars)
@@ -177,37 +177,40 @@ void runTask02_validation(int numOfCars)
     std::size_t successCntInTest = 0;
     std::size_t numOfFullPerms = 0;
 
-    std::cout << "Step 1: Checking if the algorithm misses any successful outputs.\n";
+    std::println();
+    std::println("Step 1: Checking if the algorithm misses any successful outputs.");
     {
         std::vector<std::vector<int>> allPossibleInputOrders;
         std::vector<int> revOutOrder(outputOrder);
         std::ranges::reverse(revOutOrder);
-        algorithm::generateAllStackOutput(revOutOrder, allPossibleInputOrders);
+        myalgorithm::generateAllStackOutput(revOutOrder, allPossibleInputOrders);
         for (auto& inOrder : allPossibleInputOrders) {
             std::ranges::reverse(inOrder);
         }
         numOfSuccessfulCases = allPossibleInputOrders.size();
-        std::cout << "done.\n";
+        std::println("Done.");
 
-        std::cout << "Testing...\n";
+        std::println("Testing...");
         for (const auto& inputOrder : allPossibleInputOrders) {
             bool success = runTask02(inputOrder, numOfCars, nullptr);
             if (!success) {
-                std::cout << "Failed while testing the input sequence: ";
+                std::print("Failed while testing the input sequence: ");
                 for (int car : inputOrder) {
-                    std::cout << car << ' ';
+                    std::print("{} ", car);
                 }
-                std::cout << "\nPlease fix the algorithm!\n";
+                std::println();
+                std::println("Please fix the algorithm!");
                 return;
             }
         }
-        std::cout << "Passed (1/2).\n";
+        std::println("Passed (1/2).");
     }
 
-    std::cout << "Step 2: Checking if the algorithm mistakely accepts some "
-                 "failed outputs.\n";
+    std::println();
+    std::println("Step 2: Checking if the algorithm mistakely accepts some "
+                 "failed outputs.");
     {
-        std::cout << "Testing on full permutations...\n";
+        std::println("Testing on full permutations...");
 
         std::filesystem::path resultPath = "output/task02_validation_result.txt";
         std::filesystem::create_directories(resultPath.parent_path());
@@ -218,29 +221,31 @@ void runTask02_validation(int numOfCars)
             bool success = runTask02(perm, numOfCars, nullptr);
             if (success) {
                 ++successCntInTest;
-                f << std::format("[{}] ", successCntInTest);
+                std::print(f, "[{}] ", successCntInTest);
                 for (int car : perm) {
-                    f << std::format("{} ", car);
+                    std::print(f, "{} ", car);
                 }
-                f << '\n' << std::flush;
+                std::println(f);
+                f.flush();
             }
             ++numOfFullPerms;
         } while (std::ranges::next_permutation(perm).found);
 
         f.close();
 
-        std::cout << std::format(
-            "All cases accepted by the algorithm have been saved to {}.\n",
+        std::println(
+            "All cases accepted by the algorithm have been saved to {}.",
             resultPath.string());
 
         if (successCntInTest != numOfSuccessfulCases) {
-            std::cout << "Failed. Please fix the algorithm!\n";
+            std::println("Failed. Please fix the algorithm!");
             return;
         }
-        std::cout << "Passed (2/2).\n";
+        std::println("Passed (2/2).");
     }
 
-    std::cout << std::format("Congratulations! All {}/{} successful cases are "
-                             "accepted by your algorithm! Good job!\n",
-                             successCntInTest, numOfFullPerms);
+    std::println();
+    std::println("Congratulations! All {}/{} successful cases are "
+                 "accepted by your algorithm! Good job!",
+                 successCntInTest, numOfFullPerms);
 }

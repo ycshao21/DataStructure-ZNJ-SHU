@@ -2,6 +2,7 @@
 
 #include <format>
 #include <iostream>
+#include <print>
 #include <queue>
 #include <string>
 #include <unordered_map>
@@ -94,6 +95,10 @@ public:
     }
     void printKeyTree(std::ostream& out = std::cout) const
     {
+        if (m_root == nullptr) {
+            std::println(out, "(Empty Tree)");
+            return;
+        }
         _printKeyTree(m_root, out);
     }
 
@@ -108,7 +113,7 @@ private:
     static void _printKeyTree(Node* r, std::ostream& out = std::cout);
     static void printElement(Node* r)
     {
-        std::cout << r->data.second << " ";
+        std::print("{} ", r->data.second);
     }
     static void dispose(Node* node)
     {
@@ -540,8 +545,8 @@ void BinarySearchTree<K, E>::_printKeyTree(Node* r, std::ostream& out)
         }
 
         // Print the current level.
-        out << firstLine << '\n';
-        out << secondLine << '\n';
+        std::println(out, "{}", firstLine);
+        std::println(out, "{}", secondLine);
     }
 }
 }  // namespace myds

@@ -2,8 +2,8 @@
 
 #include <algorithm>
 #include <format>
-#include <iostream>
 #include <limits>
+#include <print>
 #include <ranges>
 #include <vector>
 
@@ -362,7 +362,7 @@ template <class V, class W, W inf>
 void AdjMatWDirGraph<V, W, inf>::printAdjacentMatrix(std::ostream& out) const
 {
     if (m_vertices.empty()) {
-        out << "None\n";
+        std::println(out, "(None)");
         return;
     }
 
@@ -381,31 +381,31 @@ void AdjMatWDirGraph<V, W, inf>::printAdjacentMatrix(std::ostream& out) const
     }
 
     // Column title
-    out << std::format("{:>{}}", "", max_width + 2);
+    std::print(out, "{:>{}}", "", max_width + 2);
     for (const auto& v : m_vertices) {
-        out << std::format("{:>{}} ", v, max_width);
+        std::print(out, "{:>{}} ", v, max_width);
     }
-    out << '\n';
+    std::println(out);
 
-    out << std::format("{:>{}}", "", max_width + 2);
+    std::print(out, "{:>{}}", "", max_width + 2);
     std::string separator(max_width + 1, '-');
     for (const auto& v : m_vertices) {
-        out << separator;
+        std::print(out, "{}", separator);
     }
-    out << '\n';
+    std::println(out);
 
     for (std::size_t i = 0; i < m_vertices.size(); ++i) {
         // Row title
-        out << std::format("{:>{}} |", m_vertices[i], max_width);
+        std::print(out, "{:>{}} |", m_vertices[i], max_width);
         // Row content
         for (const W& w : m_adjMat[i]) {
             if (w == inf) {
-                out << std::format("{:>{}} ", "inf", max_width);
+                std::print(out, "{:>{}} ", "inf", max_width);
             } else {
-                out << std::format("{:>{}} ", w, max_width);
+                std::print(out, "{:>{}} ", w, max_width);
             }
         }
-        out << '\n';
+        std::println(out);
     }
 }
 
@@ -418,15 +418,15 @@ void AdjMatWDirGraph<V, W, inf>::printEdges(std::ostream& out) const
         for (IndexType toIndex = 0; toIndex < (IndexType) m_adjMat.getDim(); ++toIndex) {
             if (m_adjMat[fromIndex][toIndex] != inf) {
                 ++edgeCnt;
-                out << std::format("({0}) <{1}, {2}>: {3}\n", edgeCnt,
-                                   m_vertices[fromIndex], m_vertices[toIndex],
-                                   m_adjMat[fromIndex][toIndex]);
+                std::println(out, "({0}) <{1}, {2}>: {3}", edgeCnt,
+                           m_vertices[fromIndex], m_vertices[toIndex],
+                           m_adjMat[fromIndex][toIndex]);
             }
         }
     }
 
     if (edgeCnt == 0) {
-        out << "None\n";
+        std::println(out, "(None)");
     }
 }
 }  // namespace myds

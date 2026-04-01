@@ -1,5 +1,5 @@
 #include <algorithm>
-#include <format>
+#include <print>
 #include <unordered_set>
 #include <vector>
 #include <array>
@@ -12,7 +12,7 @@
 #include "task03.hpp"
 
 static int getKeyFromUser() {
-    std::cout << "Please input an integer: ";
+    std::print("Please input an integer: ");
     int key;
     while (true) {
         std::cin >> key;
@@ -21,74 +21,70 @@ static int getKeyFromUser() {
         if (validInput) {
             break;
         }
-        std::cout << "Invalid input! Please re-input an integer: ";
+        std::print("Invalid input! Please re-input an integer: ");
     }
     return key;
 }
 
 void bst_functionalTest()
 {
+    utils::Menu menu("BST Functional Test", true, "Return to Main Menu");
+
     myds::BinarySearchTree<int, int> tree;
-    const std::array<std::string, 7> menu = {
-        "Insert Element",
-        "Erase Element (Ver1: Replace with Successor)",
-        "Erase Element (Ver2: Replace with Predecessor)",
-        "Erase Element (Ver3: Move Left Subtree to Successor)",
-        "Erase Element (Ver4: Move Right Subtree to Predecessor)",
-        "Clear",
-        "Return to Main Menu"
-    };
-
-    while (true) {
-        std::cout << "\nBST Functional Test\n" << std::endl;
+    menu.setHeader([&]() {
+        std::println();
         tree.printKeyTree();
+    });
 
-        for (std::size_t i = 0; i < menu.size(); ++i) {
-            std::cout << std::format("[{}] {}\n", i + 1, menu[i]);
-        }
-
-        int choice = utils::getChoice(7);
-        if (choice == menu.size()) {
-            return;
-        }
-        if (choice == 6) {
-            tree.clear();
-            continue;
-        }
-
-        std::cout << std::format("\n[{}]\n", menu[choice - 1]);
-
+    menu.addItem("Insert Element", [&]() {
         int key = getKeyFromUser();
-        if (choice == 1) {
-            tree.insert(key, key);
-        } else if (choice == 2) {
-            tree.erase_ver1(key);
-        } else if (choice == 3) {
-            tree.erase_ver2(key);
-        } else if (choice == 4) {
-            tree.erase_ver3(key);
-        } else if (choice == 5) {
-            tree.erase_ver4(key);
-        }
-    }
+        tree.insert(key, key);
+    });
+
+    menu.addItem("Erase Element (Ver1: Replace with Successor)", [&]() {
+        int key = getKeyFromUser();
+        tree.erase_ver1(key);
+    });
+
+    menu.addItem("Erase Element (Ver2: Replace with Predecessor)", [&]() {
+        int key = getKeyFromUser();
+        tree.erase_ver2(key);
+    });
+
+    menu.addItem("Erase Element (Ver3: Move Left Subtree to Successor)", [&]() {
+        int key = getKeyFromUser();
+        tree.erase_ver3(key);
+    });
+
+    menu.addItem("Erase Element (Ver4: Move Right Subtree to Predecessor)", [&]() {
+        int key = getKeyFromUser();
+        tree.erase_ver4(key);
+    });
+
+    menu.addItem("Clear", [&]() {
+        tree.clear();
+    });
+
+    menu.run();
 }
 
 void bst_efficiencyTest()
 {
-    std::cout << "\nBST Efficiency Test\n";
-    std::cout << "Please enter the number of elements: ";
+    std::println("BST Efficiency Test");
+    std::print("Please input the number of elements: ");
     int num;
     bool validInput;
     while (true) {
         std::cin >> num;
         validInput = !std::cin.fail() && num > 0;
         utils::clearBuffer();
-        if (validInput)
+        if (validInput) {
             break;
-        std::cout << "Please enter a valid number of elements: ";
+        }
+        std::print("Invalid input! Please re-input the number of elements: ");
     }
 
-    std::cout << "Generating random elements...\n" << std::endl;
+    std::println("Generating random elements...");
     std::unordered_set<int> uniqueKeys;
     std::vector<std::pair<int, int>> elements;
     while (elements.size() < static_cast<size_t>(num)) {
@@ -102,7 +98,7 @@ void bst_efficiencyTest()
     myds::BinarySearchTree<int, int> baseTree(elements);
 
     auto runTest = [&](int version, const std::string& description) {
-        std::cout << std::format("Testing {}: ", description);
+        std::print("Testing {}: ", description);
         myds::BinarySearchTree<int, int> testTree(baseTree);
         utils::Timer timer;
         for (const auto& e : elements) {
@@ -116,7 +112,7 @@ void bst_efficiencyTest()
                 testTree.erase_ver4(e.first);
             }
         }
-        std::cout << std::format("Time taken: {}s\n", timer.elapsed());
+        std::println("Time taken: {}s", timer.elapsed());
     };
     runTest(1, "Replace with Successor");
     runTest(2, "Replace with Predecessor");

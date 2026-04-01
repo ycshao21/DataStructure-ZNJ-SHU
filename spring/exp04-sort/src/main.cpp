@@ -1,6 +1,6 @@
 #include <algorithm>
 #include <filesystem>
-#include <format>
+#include <print>
 #include <iostream>
 #include <ranges>
 #include <vector>
@@ -15,13 +15,12 @@
 
 void runTask01()
 {
-    static const std::array<std::string, 2> menu{"Manual Input", "Random Generation"};
-    for (std::size_t i = 0; i < menu.size(); ++i) {
-        std::cout << std::format("[{}] {}\n", i + 1, menu[i]);
-    }
-    std::size_t mode = utils::getChoice(menu.size());
+    utils::Menu menu("", false);
+    menu.addItem("Manual Input");
+    menu.addItem("Random Generation");
+    std::size_t mode = menu.ask();
 
-    std::cout << "Please input the size of the array: ";
+    std::print("Please input the size of the array: ");
     int size;
     while (true) {
         std::cin >> size;
@@ -30,14 +29,14 @@ void runTask01()
         if (validInput) {
             break;
         }
-        std::cout << "Invalid input! Please re-input the size of the array: ";
+        std::print("Invalid input! Please re-input the size of the array: ");
     }
     
     std::vector<int> arr;
     if (mode == 1) {
         arr.resize(size);
 
-        std::cout << "Please input the elements of the array: ";
+        std::print("Please input the elements of the array: ");
         while (true) {
             bool validInput = true;
             for (int i = 0; i < size; ++i) {
@@ -51,37 +50,42 @@ void runTask01()
             if (validInput) {
                 break;
             }
-            std::cout << "Invalid input! Please re-input the elements of the array: ";
+            std::print("Invalid input! Please re-input the elements of the array: ");
         }
     } else {
-        std::cout << "Generating the array...\n";
+        std::println("Generating the array...");
         arr = utils::RandUniform<int>().generateVec(size, -20000, 20000);
     }
+
+    std::println();
 
     std::vector<int> expected(arr);
     std::ranges::sort(expected);
 
     auto runTest = [&](const std::string& label, std::vector<int> testArr, auto sortFunc, bool check) {
-        std::cout << std::format("\n--- {} ---\n", label);
+        std::println("--- {} ---", label);
         
         utils::Timer timer;
         sortFunc(testArr);
         auto elapsed = timer.elapsed();
 
         if (mode == 1) {
-            std::cout << "Result:";
-            for (int e : testArr) std::cout << std::format(" {}", e);
-            std::cout << "\n";
+            std::print("Result:");
+            for (int e : testArr) {
+                std::print(" {}", e);
+            }
+            std::println();
         }
 
-        std::cout << std::format("Elapsed time: {} ms\n", elapsed);
+        std::println("Elapsed time: {}s", elapsed);
         if (check) {
             if (testArr != expected) {
-                std::cout << "!!! [ERROR] Wrong Sorting Result !!!\n";
+                std::println("!!! [ERROR] Wrong Sorting Result !!!");
             } else {
-                std::cout << "[OK] Verification Passed.\n";
+                std::println("[OK] Verification Passed.");
             }
         }
+        std::println();
     };
 
     runTest("std::sort", arr, [](std::vector<int>& v) { std::ranges::sort(v); }, false);
@@ -96,7 +100,7 @@ void runTask01()
 void runTask02()
 {
     int n, m;
-    std::cout << "Please input the number of DNA strings and their lengths: ";
+    std::print("Please input the number of DNA strings and their lengths: ");
     while (true) {
         std::cin >> n >> m;
         bool validInput = !std::cin.fail() && n > 0 && m > 0;
@@ -104,16 +108,16 @@ void runTask02()
         if (validInput) {
             break;
         }
-        std::cout << "Invalid input! Please re-input the number of DNA strings and their lengths: ";
+        std::print("Invalid input! Please re-input the number of DNA strings and their lengths: ");
     }
 
-    std::cout << "Please input the DNA strings (only characters A, C, G, T are allowed):\n";
+    std::println("Please input the DNA strings (only characters A, C, G, T are allowed):");
     std::vector<std::string> dnaVec(n);
     for (int i = 0; i < n; i++) {
         while (true) {
-            std::cout << std::format("({}) ", i + 1);
+            std::print("({}) ", i + 1);
             std::cin >> dnaVec[i];
-            if (dnaVec[i].size() == m) {
+            if ((int)dnaVec[i].size() == m) {
                 bool validInput = true;
                 for (char c : dnaVec[i]) {
                     if (c != 'A' && c != 'C' && c != 'G' && c != 'T') {
@@ -126,7 +130,7 @@ void runTask02()
                 }
             }
             utils::clearBuffer();
-            std::cout << "Invalid input! Please re-input the DNA string: ";
+            std::println("Invalid input! Please re-input the DNA string: ");
         }
     }
     dnaSort(dnaVec);
@@ -134,35 +138,10 @@ void runTask02()
 
 void exp04_sort()
 {
-    const std::array<std::string, 3> menu = {
-        "Task 1 - Quick Sort",
-        "Task 2 - DNA Sort",
-        "Exit"
-    };
-
-    while (true) {
-        std::cout << "Exp04 - Sort\n";
-
-        for (std::size_t i = 0; i < menu.size(); ++i) {
-            std::cout << std::format("[{}] {}\n", i + 1, menu[i]);
-        }
-
-        std::size_t choice = utils::getChoice(menu.size());
-        if (choice == menu.size()) {
-            return;
-        }
-
-        std::cout << '\n';
-        std::cout << std::format("[{}]\n", menu[choice - 1]);
-
-        if (choice == 1) {
-            runTask01();
-        } else if (choice == 2) {
-            runTask02();
-        }
-
-        std::cout << '\n';
-    }
+    utils::Menu menu("Exp04 - Sort");
+    menu.addItem("Task 1 - Quick Sort", runTask01);
+    menu.addItem("Task 2 - DNA Sort", runTask02);
+    menu.run();
 }
 
 int main()

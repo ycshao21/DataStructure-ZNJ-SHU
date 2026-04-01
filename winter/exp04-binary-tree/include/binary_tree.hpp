@@ -2,6 +2,7 @@
 
 #include <format>
 #include <iostream>
+#include <print>
 #include <queue>
 #include <ranges>
 #include <unordered_map>
@@ -128,7 +129,7 @@ public:
      * @brief Print the tree to the output stream.
      * @param out Output stream.
      */
-    void print(std::ostream& out) const
+    void print(std::ostream& out = std::cout) const
     {
         _print(m_root, out);
     }
@@ -191,7 +192,7 @@ private:
      * @param r Root of the tree.
      * @param out Output stream.
      */
-    static void _print(BinaryTreeNode<T>* r, std::ostream& out = std::cout);
+    static void _print(BinaryTreeNode<T>* r, std::ostream& out);
 
     BinaryTreeNode<T>* m_root = nullptr;      // Pointer to the root.
     std::size_t m_size = 0;                   // Number of elements.
@@ -223,8 +224,7 @@ void BinaryTree<T>::makeTree(const T& element, const BinaryTree<T>& left,
                              const BinaryTree<T>& right)
 {
     clear();
-    m_root =
-        new BinaryTreeNode<T>{element, copyTree(left.m_root), copyTree(right.m_root)};
+    m_root = new BinaryTreeNode<T>{element, copyTree(left.m_root), copyTree(right.m_root)};
     m_size = left.m_size + right.m_size + 1;
 }
 
@@ -415,13 +415,14 @@ void BinaryTree<T>::_print(BinaryTreeNode<T>* r, std::ostream& out)
             }
         }
         // Print the current level.
-        out << std::format("{}\n{}\n", firstLine, secondLine);
+        std::println(out, "{}", firstLine);
+        std::println(out, "{}", secondLine);
     }
 }
 
 // @brief Output the tree to the output stream.
 template <class T>
-std::ostream& operator<<(std::ostream& out, BinaryTree<T>& tree)
+std::ostream& operator<<(std::ostream& out, const BinaryTree<T>& tree)
 {
     tree.print(out);
     return out;

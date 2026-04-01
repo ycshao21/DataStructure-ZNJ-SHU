@@ -14,7 +14,7 @@ public:
      * @brief Construct a stack with a given capacity.
      * @param capacity The capacity of the stack.
      */
-    Stack(std::size_t capacity = 0);
+    Stack(int capacity = 0);
     /**
      * @brief Copy constructor.
      * @param other The stack to be copied.
@@ -63,7 +63,7 @@ public:
      */
     bool isEmpty() const
     {
-        return m_topIndex == static_cast<std::size_t>(-1);
+        return m_topIndex == -1;
     };
     /**
      * @brief Check if the stack is full.
@@ -104,15 +104,14 @@ public:
 private:
     void checkEmpty() const
     {
-        if (m_topIndex == static_cast<std::size_t>(-1)) {
+        if (m_topIndex == -1) {
             throw std::runtime_error("Stack is empty!");
         }
     }
 
     T* m_data = nullptr;  // Elements in the stack.
-    std::size_t m_topIndex =
-        static_cast<std::size_t>(-1);  // Index of the top element (-1 if empty).
-    std::size_t m_capacity = 0;        // Current capacity of the stack.
+    int m_topIndex = -1;  // Index of the top element (-1 if empty).
+    int m_capacity = 0;  // Current capacity of the stack.
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -120,8 +119,12 @@ private:
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 template <class T>
-Stack<T>::Stack(std::size_t capacity) : m_capacity(capacity)
+Stack<T>::Stack(int capacity) : m_capacity(capacity)
 {
+    if (capacity < 0) {
+        throw std::invalid_argument("Capacity cannot be negative!");
+    }
+
     if (capacity == 0) {
         m_data = nullptr;
     } else {
@@ -144,7 +147,7 @@ Stack<T>::Stack(Stack<T>&& other) noexcept
     : m_data(other.m_data), m_topIndex(other.m_topIndex), m_capacity(other.m_capacity)
 {
     other.m_data = nullptr;
-    other.m_topIndex = static_cast<std::size_t>(-1);
+    other.m_topIndex = -1;
     other.m_capacity = 0;
 }
 
@@ -154,8 +157,8 @@ Stack<T>& Stack<T>::operator=(const Stack<T>& other)
     if (this != &other) {
         // Delete the old stack.
         if (m_data != nullptr) {
-            std::size_t size = getSize();
-            for (std::size_t i = 0; i < size; ++i) {
+            int size = getSize();
+            for (int i = 0; i < size; ++i) {
                 m_data[i].~T();
             }
             ::operator delete(m_data, m_capacity * sizeof(T));
@@ -176,8 +179,8 @@ Stack<T>& Stack<T>::operator=(Stack<T>&& other) noexcept
     if (this != &other) {
         // Delete the old stack.
         if (m_data != nullptr) {
-            std::size_t size = getSize();
-            for (std::size_t i = 0; i < size; ++i) {
+            int size = getSize();
+            for (int i = 0; i < size; ++i) {
                 m_data[i].~T();
             }
             ::operator delete(m_data, m_capacity * sizeof(T));
@@ -188,7 +191,7 @@ Stack<T>& Stack<T>::operator=(Stack<T>&& other) noexcept
         m_capacity = other.m_capacity;
 
         other.m_data = nullptr;
-        other.m_topIndex = static_cast<size_t>(-1);
+        other.m_topIndex = -1;
         other.m_capacity = 0;
     }
     return *this;
@@ -198,8 +201,8 @@ template <class T>
 Stack<T>::~Stack()
 {
     if (m_data != nullptr) {
-        std::size_t size = getSize();
-        for (std::size_t i = 0; i < size; ++i) {
+        int size = getSize();
+        for (int i = 0; i < size; ++i) {
             m_data[i].~T();
         }
         ::operator delete(m_data, m_capacity * sizeof(T));
@@ -225,8 +228,8 @@ void Stack<T>::push(const T& element)
 {
     // If the stack is full, expand the capacity by 50%.
     if (isFull()) {
-        std::size_t increment = std::max((m_capacity >> 1), static_cast<std::size_t>(1));
-        std::size_t newCapacity = m_capacity + increment;
+        int increment = std::max((m_capacity >> 1), 1);
+        int newCapacity = m_capacity + increment;
 
         T* newData = (T*) ::operator new(newCapacity * sizeof(T));
         if (m_data != nullptr) {
@@ -246,12 +249,15 @@ void Stack<T>::push(T&& element)
 {
     // If the stack is full, expand the capacity by 50%.
     if (isFull()) {
-        std::size_t increment = std::max((m_capacity >> 1), static_cast<std::size_t>(1));
-        std::size_t newCapacity = m_capacity + increment;
+        int increment = std::max((m_capacity >> 1), 1);
+        int newCapacity = m_capacity + increment;
 
         T* newData = (T*) ::operator new(newCapacity * sizeof(T));
         if (m_data != nullptr) {
             std::uninitialized_move(m_data, m_data + m_capacity, newData);
+            for (int i = 0; i < m_capacity; ++i) {
+                m_data[i].~T();
+            }
             ::operator delete(m_data, m_capacity * sizeof(T));
         }
         m_data = newData;

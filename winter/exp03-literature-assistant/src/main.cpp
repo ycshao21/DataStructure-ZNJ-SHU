@@ -1,11 +1,11 @@
 #include <filesystem>
-#include <iostream>
+#include <print>
 
 #include "solution.hpp"
 
 void exp03_literatureAssistant()
 {
-    std::cout << "Exp03 - Literature Assistant\n";
+    std::println("Exp03 - Literature Assistant");
 
     std::filesystem::path patternPath = "data/patterns.txt";
     std::filesystem::path textPath = "data/text.txt";

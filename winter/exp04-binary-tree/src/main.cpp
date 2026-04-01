@@ -2,6 +2,7 @@
 #include <filesystem>
 #include <format>
 #include <iostream>
+#include <print>
 
 #include "utils/console.hpp"
 
@@ -9,55 +10,43 @@
 
 void exp04_binaryTree()
 {
-    const std::array<std::string, 3> menu = {"Task 1", "Task 2", "Exit"};
+    utils::Menu menu("Exp04 - Binary Tree");
 
-    while (true) {
-        std::cout << "Exp04 - Binary Tree\n";
-        for (std::size_t i = 0; i < menu.size(); ++i) {
-            std::cout << std::format("[{}] {}\n", i + 1, menu[i]);
+    menu.addItem("Task 1", []() {
+        runTask01();
+    });
+
+    menu.addItem("Task 2", []() {
+        std::print("Please input the number of cases: ");
+        int numOfCases;
+        while (true) {
+            std::cin >> numOfCases;
+            bool validInput = !std::cin.fail() && numOfCases > 0;
+            utils::clearBuffer();
+            if (validInput) {
+                break;
+            }
+            std::print("Invalid input! Please re-input the number of cases: ");
         }
 
-        std::size_t choice = utils::getChoice(menu.size());
-        if (choice == menu.size()) {
-            return;
-        }
-
-        std::cout << std::format("\n[{}]\n", menu[choice - 1]);
-
-        if (choice == 1) {
-            runTask01();
-        } else {
-            std::cout << "Please input the number of cases: ";
-            int numOfCases;
+        std::println("Please input the cases:");
+        for (int i = 0; i < numOfCases; ++i) {
+            int a, b;
             while (true) {
-                std::cin >> numOfCases;
-                bool validInput = !std::cin.fail() && numOfCases > 0;
+                std::print("({}) ", i + 1);
+                std::cin >> a >> b;
+                bool validInput = !std::cin.fail() && a > 0 && b > 0;
                 utils::clearBuffer();
                 if (validInput) {
                     break;
                 }
-                std::cout << "Invalid input! Please re-input the number of cases: ";
+                std::print("Invalid input! Please re-input the cases: ");
             }
-
-            std::cout << "Please input the cases:\n";
-            for (int i = 0; i < numOfCases; ++i) {
-                int a, b;
-                while (true) {
-                    std::cout << std::format("({}) ", i + 1);
-                    std::cin >> a >> b;
-                    bool validInput = !std::cin.fail() && a > 0 && b > 0;
-                    utils::clearBuffer();
-                    if (validInput) {
-                        break;
-                    }
-                    std::cout << "Invalid input! Please re-input the cases: ";
-                }
-                runTask02(a, b);
-            }
+            runTask02(a, b);
         }
+    });
 
-        std::cout << '\n' << std::flush;
-    }
+    menu.run();
 }
 
 int main()

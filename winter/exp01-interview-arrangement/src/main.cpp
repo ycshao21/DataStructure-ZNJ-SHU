@@ -1,16 +1,14 @@
-#include <array>
 #include <filesystem>
-#include <format>
-#include <iostream>
+#include <print>
 
 #include "utils/console.hpp"
 
-#include "efficiency_test.hpp"
 #include "solution.hpp"
+#include "efficiency_test.hpp"
 
-static void getInputValues(int& n, int& k, int& m)
+static void inputNKM(int& n, int& k, int& m)
 {
-    std::cout << "Please input the values of N, K, M: ";
+    std::print("Please input the values of N, K, M: ");
     while (true) {
         std::cin >> n >> k >> m;
         bool isValid = !std::cin.fail() && n > 0 && k > 0 && m > 0;
@@ -18,43 +16,27 @@ static void getInputValues(int& n, int& k, int& m)
         if (isValid) {
             break;
         }
-        std::cout << "Invalid input! Please re-input the values of N, K, M: ";
+        std::print("Invalid input! Please re-input the values of N, K, M: ");
     }
 }
 
 static void exp01_interviewArrangement()
 {
-    const std::array<std::string, 4> menu = {"Task 1", "Task 2", "Efficiency Test",
-                                             "Exit"};
+    utils::Menu menu("Exp01 - Interview Arrangement");
 
-    while (true) {
-        std::cout << "Exp01 - Interview Arrangement\n";
+    menu.addItem("Task 1", []() {
+        int n, k, m;
+        inputNKM(n, k, m);
+        runTask01(n, k, m, &std::cout);
+    });
+    menu.addItem("Task 2", []() {
+        int n, k, m;
+        inputNKM(n, k, m);
+        runTask02(n, k, m, &std::cout);
+    });
+    menu.addItem("Efficiency Test", efficiencyTest);
 
-        for (std::size_t i = 0; i < menu.size(); ++i) {
-            std::cout << std::format("[{}] {}\n", i + 1, menu[i]);
-        }
-
-        std::size_t choice = utils::getChoice(menu.size());
-        if (choice == menu.size()) {
-            return;
-        }
-
-        std::cout << std::format("\n[{}]\n", menu[choice - 1]);
-
-        if (choice == 1) {
-            int n, k, m;
-            getInputValues(n, k, m);
-            runTask01(n, k, m, &std::cout);
-        } else if (choice == 2) {
-            int n, k, m;
-            getInputValues(n, k, m);
-            runTask02(n, k, m, &std::cout);
-        } else if (choice == 3) {
-            efficiencyTest();
-        }
-
-        std::cout << '\n' << std::flush;
-    }
+    menu.run();
 }
 
 int main()

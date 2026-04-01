@@ -1,5 +1,6 @@
 #pragma once
 
+#include <print>
 #include <iostream>
 #include <string>
 #include <utility>
@@ -13,7 +14,7 @@ public:
 
     virtual void report() const
     {
-        std::cerr << m_message << '\n';
+        std::println(std::cerr, "{}", m_message);
     }
 
 private:

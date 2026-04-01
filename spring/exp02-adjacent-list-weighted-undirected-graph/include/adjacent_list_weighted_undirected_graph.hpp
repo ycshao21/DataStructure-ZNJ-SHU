@@ -1,7 +1,7 @@
 #pragma once
 
 #include <algorithm>
-#include <format>
+#include <print>
 #include <iostream>
 #include <limits>
 #include <list>
@@ -145,7 +145,7 @@ private:
 
     static void printVertex(const V& v)
     {
-        std::cout << v << " ";
+        std::print("{} ", v);
     }
 
     template <class V1, class W1, W1 inf1>
@@ -542,7 +542,7 @@ template <class V, class W, W inf>
 void AdjListWUndirGraph<V, W, inf>::printAdjacentList(std::ostream& out) const
 {
     if (m_vertices.empty()) {
-        out << "None\n";
+        std::println(out, "(None)");
         return;
     }
 
@@ -552,11 +552,11 @@ void AdjListWUndirGraph<V, W, inf>::printAdjacentList(std::ostream& out) const
     }
     for (IndexType fromIndex = 0; fromIndex < (IndexType) m_vertices.size();
          ++fromIndex) {
-        out << std::format("{:>{}} | ", m_vertices[fromIndex], max_width);
+        std::print(out, "{:>{}} | ", m_vertices[fromIndex], max_width);
         for (const auto& e : m_adjLists[fromIndex]) {
-            out << std::format("{}({}) -> ", m_vertices[e.toIndex], e.weight);
+            std::print(out, "{}({}) -> ", m_vertices[e.toIndex], e.weight);
         }
-        out << "end\n";
+        std::println(out, "end");
     }
 }
 
@@ -569,15 +569,15 @@ void AdjListWUndirGraph<V, W, inf>::printEdges(std::ostream& out) const
         for (const auto& e : m_adjLists[fromIndex]) {
             if (fromIndex < e.toIndex) {
                 ++edgeCnt;
-                out << std::format("({0}) ({1}, {2}): {3}\n", edgeCnt,
-                                   m_vertices[fromIndex], m_vertices[e.toIndex],
-                                   e.weight);
+                std::println(out, "({0}) ({1}, {2}): {3}", edgeCnt,
+                           m_vertices[fromIndex], m_vertices[e.toIndex],
+                           e.weight);
             }
         }
     }
 
     if (edgeCnt == 0) {
-        out << "None\n";
+        std::println(out, "(None)");
     }
 }
 

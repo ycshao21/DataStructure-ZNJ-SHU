@@ -2,6 +2,7 @@
 #include <cstdint>
 #include <format>
 #include <iostream>
+#include <print>
 #include <queue>
 #include <stack>
 #include <vector>
@@ -29,9 +30,9 @@ void printPath(const std::vector<V>& vertices, const std::vector<IndexType>& pat
         curIndex = path[curIndex];
     }
 
-    out << vertices[srcIndex];
+    std::print(out, "{}", vertices[srcIndex]);
     while (!st.empty()) {
-        out << std::format("->{}", vertices[st.top()]);
+        std::print(out, "->{}", vertices[st.top()]);
         st.pop();
     }
 }
@@ -104,12 +105,13 @@ void dijkstra(const myds::AdjMatWDirGraph<V, W, inf>& g, const V& src, const V& 
     // Print the shortest path.
     if (out) {
         if (dists[endIndex] == inf) {
-            (*out) << "No path.\n";
+            std::println(*out, "No path.");
             return;
         }
-        (*out) << "Shortest path: ";
+        std::print(*out, "Shortest path: ");
         printPath(g.m_vertices, path, srcIndex, endIndex, *out);
-        (*out) << std::format("\nDistance: {}\n", dists[endIndex]);
+        std::println(*out);
+        std::println(*out, "Distance: {}", dists[endIndex]);
     }
 }
 
@@ -180,12 +182,13 @@ void bellmanFord(const myds::AdjMatWDirGraph<V, W, inf>& g, const V& src, const 
     // Print the shortest path.
     if (out) {
         if (dists[endIndex] == inf) {
-            (*out) << "No path.\n";
+            std::println(*out, "No path.");
             return;
         }
-        (*out) << "Shortest path: ";
+        std::print(*out, "Shortest path: ");
         printPath(g.m_vertices, path, srcIndex, endIndex, *out);
-        (*out) << std::format("\nDistance: {}\n", dists[endIndex]);
+        std::println(*out);
+        std::println(*out, "Distance: {}", dists[endIndex]);
     }
 }
 
@@ -247,12 +250,13 @@ void floydWarshall(const myds::AdjMatWDirGraph<V, W, inf>& g, const V& src, cons
     // Print the shortest path.
     if (out) {
         if (dists[srcIndex][endIndex] == inf) {
-            (*out) << "No path.\n";
+            std::println(*out, "No path.");
             return;
         }
-        (*out) << "Shortest path: ";
+        std::print(*out, "Shortest path: ");
         printPath(g.m_vertices, paths[srcIndex], srcIndex, endIndex, *out);
-        (*out) << std::format("\nDistance: {}\n", dists[srcIndex][endIndex]);
+        std::println(*out);
+        std::println(*out, "Distance: {}", dists[srcIndex][endIndex]);
     }
 }
 }  // namespace algorithm
